@@ -1,4 +1,16 @@
 @page "/moreInfo"
 
+@using BlazorApp.Data
+@inject TestDataRetrieval DataRetrieval
+
 <h1>More Information</h1>
 
+
+@code{
+    private TestData[] testdata;
+
+    protected override async Task OnInitializedAsync()
+    {
+        testdata = await DataRetrieval.GetTestDataAsync(); 
+    }
+}
