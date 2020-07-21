@@ -51,3 +51,7 @@ C:\Users\i00018\source\repos\BlazorApp\obj\Debug\netcoreapp3.1\BlazorApp.genrunt
 C:\Users\i00018\source\repos\BlazorApp\obj\Debug\netcoreapp3.1\BlazorApp.csproj.CopyComplete
 C:\Users\i00018\source\repos\BlazorApp\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\Home.razor.g.cs
 C:\Users\i00018\source\repos\BlazorApp\obj\Debug\netcoreapp3.1\Razor\Pages\Home.razor.g.cs
+C:\Users\i00018\source\repos\BlazorApp\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\MoreInfo.razor.g.cs
+C:\Users\i00018\source\repos\BlazorApp\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\Previous.razor.g.cs
+C:\Users\i00018\source\repos\BlazorApp\obj\Debug\netcoreapp3.1\Razor\Pages\MoreInfo.razor.g.cs
+C:\Users\i00018\source\repos\BlazorApp\obj\Debug\netcoreapp3.1\Razor\Pages\Previous.razor.g.cs
