@@ -10,7 +10,7 @@ namespace BlazorApp.Data
 
         public int AssemblyId { get; set; }
         
-        public int TestID { get; set; }
+        public int TestId { get; set; }
 
         public string Tester { get; set; }
     }

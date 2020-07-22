@@ -55,3 +55,15 @@ C:\Users\i00018\source\repos\BlazorApp\obj\Debug\netcoreapp3.1\RazorDeclaration\
 C:\Users\i00018\source\repos\BlazorApp\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\Previous.razor.g.cs
 C:\Users\i00018\source\repos\BlazorApp\obj\Debug\netcoreapp3.1\Razor\Pages\MoreInfo.razor.g.cs
 C:\Users\i00018\source\repos\BlazorApp\obj\Debug\netcoreapp3.1\Razor\Pages\Previous.razor.g.cs
+C:\Users\i00018\source\repos\BlazorApp\bin\Debug\netcoreapp3.1\System.Configuration.ConfigurationManager.dll
+C:\Users\i00018\source\repos\BlazorApp\bin\Debug\netcoreapp3.1\System.Data.SqlClient.dll
+C:\Users\i00018\source\repos\BlazorApp\bin\Debug\netcoreapp3.1\System.Security.Cryptography.ProtectedData.dll
+C:\Users\i00018\source\repos\BlazorApp\bin\Debug\netcoreapp3.1\runtimes\win-arm64\native\sni.dll
+C:\Users\i00018\source\repos\BlazorApp\bin\Debug\netcoreapp3.1\runtimes\win-x64\native\sni.dll
+C:\Users\i00018\source\repos\BlazorApp\bin\Debug\netcoreapp3.1\runtimes\win-x86\native\sni.dll
+C:\Users\i00018\source\repos\BlazorApp\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+C:\Users\i00018\source\repos\BlazorApp\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
+C:\Users\i00018\source\repos\BlazorApp\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\i00018\source\repos\BlazorApp\bin\Debug\netcoreapp3.1\BlazorApp.StaticWebAssets.xml
+C:\Users\i00018\source\repos\BlazorApp\bin\Debug\netcoreapp3.1\ChartJs.Blazor.dll
+C:\Users\i00018\source\repos\BlazorApp\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll

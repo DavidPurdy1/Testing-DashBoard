@@ -1,4 +1,43 @@
 @page "/previous"
 
+@using BlazorApp.Data
+@inject TestDataRetrieval DataRetrieval
 <h1>Previous Tests</h1>
 
+@if (testdata == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>test</th>
+                <th>Test 2</th>
+                <th>Test 3 </th>
+                <th>test 4 </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var data in testdata)
+            {
+                <tr>
+                    <td>@data.TestId</td>
+                    <td>@data.Tester</td>
+                    <td>@data.TestTime</td>
+                    <td>@data.TestStatus</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private TestData[] testdata;
+
+    protected override async Task OnInitializedAsync()
+    {
+        testdata = await DataRetrieval.GetTestDataAsync(); 
+    }
+}

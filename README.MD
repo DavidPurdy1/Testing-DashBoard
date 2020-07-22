@@ -1,8 +1,5 @@
 # Test Result and data UI
 
+- Figure out how to get data from the database
 
-- Need to fix the thing with testDataRetrieval throwing error on nav menu
-
-- Figure out how to get data from the database, then create graphics and tables with it
-
-- Learn how to html format stuff 
+- Graphics with chartjs.blazor
