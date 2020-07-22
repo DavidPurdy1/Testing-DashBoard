@@ -12,9 +12,21 @@ namespace BlazorApp.Data
         private string connectionString;
 
         //Only getting one test from each assembly
-        public Task<TestData[]> GetTestDataAsync(){
+        public Task<TestData[]> GetPreviousDataAsync(){
             //max = GetMax();
             return Task.FromResult(Enumerable.Range(1, 8).Select( index => new TestData{
+                AssemblyId = index,
+                //use AssemblyId to obtain other values
+                TestId = index, 
+                TestTime = DateTime.Now.Date, 
+                TestStatus = true,
+                Tester = "david",
+                ImageLocation = "location",
+            }).ToArray());
+        }
+        public Task<TestData[]> GetLastDataAsync(){
+            //max = GetMax();
+            return Task.FromResult(Enumerable.Range(1, 1).Select( index => new TestData{
                 AssemblyId = index,
                 //use AssemblyId to obtain other values
                 TestId = index, 
