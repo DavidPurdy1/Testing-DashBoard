@@ -11,6 +11,7 @@ namespace BlazorApp.Data
         private int max;
         private string connectionString;
 
+        //Only getting one test from each assembly
         public Task<TestData[]> GetTestDataAsync(){
             //max = GetMax();
             return Task.FromResult(Enumerable.Range(1, 8).Select( index => new TestData{
@@ -20,6 +21,7 @@ namespace BlazorApp.Data
                 TestTime = DateTime.Now.Date, 
                 TestStatus = true,
                 Tester = "david",
+                ImageLocation = "location",
             }).ToArray());
         }
 
@@ -29,7 +31,8 @@ namespace BlazorApp.Data
             connectionString = ConfigurationManager.ConnectionStrings["i dont know what the connection is yet ? "].ToString();
             using (SqlConnection myConnection = new SqlConnection(connectionString)){
                 //example query to type in
-                string queryString = "Select * from Employees where AssemblyId=@max-index";
+                int id = max - index;
+                string queryString = "Select * from Employees where AssemblyId=@id";
 
                 SqlCommand command = new SqlCommand(queryString, myConnection);
 
@@ -41,8 +44,12 @@ namespace BlazorApp.Data
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
-                    {    
+                    {   
+                        data.AssemblyId = id; 
                         data.Tester = reader["Tester"].ToString();
+                        data.ImageLocation = reader["ImageLocation"].ToString();
+                        data.TestTime = DateTime.Parse(reader["TestTime"].ToString());
+                        data.TestId = int.Parse(reader["TestId"].ToString());
                     }
                     myConnection.Close();
                 }               

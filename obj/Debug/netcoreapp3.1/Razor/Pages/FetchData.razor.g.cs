@@ -73,6 +73,13 @@ using BlazorApp.Shared;
 #line hidden
 #nullable disable
 #nullable restore
+#line 10 "C:\Users\i00018\source\repos\BlazorApp\_Imports.razor"
+using ChartJs.Blazor;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
 #line 5 "C:\Users\i00018\source\repos\BlazorApp\Pages\FetchData.razor"
 using BlazorApp.Data;
 

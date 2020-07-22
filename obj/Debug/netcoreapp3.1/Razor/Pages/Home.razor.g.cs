@@ -72,6 +72,13 @@ using BlazorApp.Shared;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 10 "C:\Users\i00018\source\repos\BlazorApp\_Imports.razor"
+using ChartJs.Blazor;
+
+#line default
+#line hidden
+#nullable disable
     [Microsoft.AspNetCore.Components.RouteAttribute("/home")]
     public partial class Home : Microsoft.AspNetCore.Components.ComponentBase
     {

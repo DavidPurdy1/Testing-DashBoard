@@ -13,5 +13,7 @@ namespace BlazorApp.Data
         public int TestId { get; set; }
 
         public string Tester { get; set; }
+
+        public string ImageLocation {get; set; }
     }
 }

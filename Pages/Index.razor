@@ -1,5 +1,10 @@
 ﻿@*example*@
 @page "/"
+@using ChartJs.Blazor.Charts
+@using ChartJs.Blazor.ChartJS.PieChart
+@using ChartJs.Blazor.ChartJS.Common.Properties
+@using ChartJs.Blazor.Util
+
 <head>
  <style type ="text/css" >
    .footer{ 
@@ -8,9 +13,59 @@
        bottom: 0px; 
        width: 80%;
    }
+   .chart{ /*I don't know how to format anything !!!*/
+       position: fixed;
+       bottom: 200;
+       right: 800;
+   }
+   
 </style>
 </head>
 <h1>Hello, welcome to the testing dashboard</h1>
 <body>
+    <div class ="chart"> <ChartJsPieChart @ref="_pieChartJs" Config="@_config" Width="200" Height="200"/> </div> 
+
     <div class="footer"><SurveyPrompt Title="How is Blazor working for you?" /></div>
 </body>
+
+@code{
+private PieConfig _config;
+private ChartJsPieChart _pieChartJs;
+protected override void OnInitialized() //Pie chart
+{
+    _config = new PieConfig
+    {
+        Options = new PieOptions
+        {
+            MaintainAspectRatio = false,
+            
+            Title = new OptionsTitle
+            {
+                Display = true,
+                Text = "Last Assembly Results"
+            },
+            Responsive = true, 
+             Animation = new ArcAnimation
+            {
+                AnimateRotate = true,
+                AnimateScale = true
+            } 
+        }
+    };
+
+    _config.Data.Labels.AddRange(new[] { "Passed", "Failed"  });
+
+    var pieSet = new PieDataset
+    {
+        BackgroundColor = new[] { ColorUtil.RandomColorString(), ColorUtil.RandomColorString(), ColorUtil.RandomColorString(), ColorUtil.RandomColorString() },
+        BorderWidth = 0,
+        HoverBackgroundColor = ColorUtil.RandomColorString(),
+        HoverBorderColor = ColorUtil.RandomColorString(),
+        HoverBorderWidth = 1,
+        BorderColor = "#ffffff",
+    };
+    //This is where you put in the data
+    pieSet.Data.AddRange(new double[] { 4, 5 });
+    _config.Data.Datasets.Add(pieSet);
+}
+}
