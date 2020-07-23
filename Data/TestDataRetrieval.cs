@@ -17,7 +17,7 @@ namespace BlazorApp.Data
             return Task.FromResult(Enumerable.Range(1, 8).Select( index => new TestData{
                 AssemblyId = index,
                 //use AssemblyId to obtain other values
-                TestId = index, 
+                TestId = 199, 
                 TestTime = DateTime.Now.Date, 
                 TestStatus = true,
                 Tester = "david",
@@ -29,7 +29,7 @@ namespace BlazorApp.Data
             return Task.FromResult(Enumerable.Range(1, 1).Select( index => new TestData{
                 AssemblyId = index,
                 //use AssemblyId to obtain other values
-                TestId = index, 
+                TestId = 199, 
                 TestTime = DateTime.Now.Date, 
                 TestStatus = true,
                 Tester = "david",
@@ -53,10 +53,8 @@ namespace BlazorApp.Data
 
                 myConnection.Open(); //ensures that it will close on code exit in the using 
 
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {   
+                using (SqlDataReader reader = command.ExecuteReader()){
+                    while (reader.Read()){   
                         data.AssemblyId = id; 
                         data.Tester = reader["Tester"].ToString();
                         data.ImageLocation = reader["ImageLocation"].ToString();
@@ -77,10 +75,8 @@ namespace BlazorApp.Data
                 SqlCommand getMax = new SqlCommand(queryString, myConnection); 
                 myConnection.Open();
 
-                using (SqlDataReader reader = getMax.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {    
+                using (SqlDataReader reader = getMax.ExecuteReader()){
+                    while (reader.Read()){    
                       // max = reader["AssemblyId"].ToString(); convert to int
                     }
                     myConnection.Close();
