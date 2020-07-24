@@ -2,18 +2,15 @@ using System;
 
 namespace BlazorApp.Data
 {
-    public class TestData
-    {
-        public DateTime TestTime { get; set; }
-
-        public bool TestStatus { get; set; }
-
-        public int AssemblyId { get; set; }
-        
-        public int TestId { get; set; }
-
-        public string Tester { get; set; }
-
-        public string ImageLocation {get; set; }
-    }
+     public class TestData{
+        public int TestsFailed { get; set; }
+        public int TestsPassed { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string ImagePath { get; set; }
+        public string ApplicationName{ get; set; }
+        public string ApplicationVersion { get; set; }
+        public string TestName{get;set;}
+        public int TestStatus{get; set;}
+    } 
 }
