@@ -1,7 +1,6 @@
 using System;
 
-namespace BlazorApp.Data
-{
+namespace BlazorApp.Data{
      public class TestData{
         public int TestCaseId{ get; set; }
         public int TestRunId{ get; set; }

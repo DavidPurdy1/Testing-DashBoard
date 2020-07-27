@@ -1243,11 +1243,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\i00018\\source\\repos\\BlazorApp\\BlazorApp.csproj",
+      "projectUniqueName": "C:\\Users\\i00018\\source\\repos\\BlazorApp\\BlazorApp.csproj",
       "projectName": "BlazorApp",
-      "projectPath": "c:\\Users\\i00018\\source\\repos\\BlazorApp\\BlazorApp.csproj",
+      "projectPath": "C:\\Users\\i00018\\source\\repos\\BlazorApp\\BlazorApp.csproj",
       "packagesPath": "C:\\Users\\i00018\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\i00018\\source\\repos\\BlazorApp\\obj\\",
+      "outputPath": "C:\\Users\\i00018\\source\\repos\\BlazorApp\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\i00018\\AppData\\Roaming\\NuGet\\NuGet.Config",

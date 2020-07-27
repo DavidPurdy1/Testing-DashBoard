@@ -1,0 +1,65 @@
+@page "/Search"
+@using BlazorApp.Data; 
+@inject TestDataRetrieval DataRetrieval
+<h1>Test Run Number Search</h1>
+
+<EditForm Model="@entry" OnValidSubmit="ValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary/>
+    <InputText id="entry" @bind-Value="entry.Text" />
+    <button class="search" @onclick="OnInitializedAsync">Search</button>
+</EditForm>
+<p> Search for different test cases by Test Run Id </p>
+@if (testdata == null){
+    <p><em>Loading...</em></p>
+}
+else{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Test Case Id</th>
+                <th>Test Name</th>
+                <th>Test Created</th>
+                <th>Test Status</th>
+                <th>Image Path</th>
+                <th>Created By</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var data in testdata){
+                @if(data.TestStatus == 1){
+                    testResult = "passed";     
+                }else{
+                    testResult = "failed"; 
+                }
+                <tr>
+                    <td>@data.TestCaseId</td>
+                    <td>@data.TestName</td>
+                    <td>@data.CreatedDate</td>
+                    <td>@testResult</td>
+                    <td>@data.ImagePath</td>
+                    <td>@data.CreatedBy</td>
+                </tr>   
+            }
+        </tbody>
+    </table>
+}
+@code {
+    
+    TestData[] testdata; 
+    string testResult = "";
+    private DataEntry entry = new DataEntry();
+    private void ValidSubmit(){
+        Console.WriteLine("Valid Submit");
+    }
+     protected override async Task OnInitializedAsync(){
+        if(entry.Text != null){
+            try{
+              DataRetrieval.SearchId = int.Parse(entry.Text);  
+            }catch(Exception){
+                Console.WriteLine("Inproper Entry");
+            }
+        }
+        testdata = await DataRetrieval.GetSearchDataAsync();
+    }
+}

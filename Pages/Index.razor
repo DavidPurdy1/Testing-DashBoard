@@ -1,5 +1,6 @@
 ﻿@*example*@
 @page "/"
+
 @using ChartJs.Blazor.Charts
 @using ChartJs.Blazor.ChartJS.PieChart
 @using ChartJs.Blazor.ChartJS.BarChart
@@ -29,8 +30,14 @@
    .table{
        position: fixed;
        margin-top:0px;
-       margin-left: 950px;
+       margin-left: 600px;
        width: 625px; 
+   }
+   .td{
+        padding-top: 12px;
+        padding-bottom: 12px;
+        word-wrap: none;
+        word-break: keep-all;
    }
    
 </style>
@@ -38,7 +45,6 @@
 <h1>DashBoard Home</h1>
 <body>
     <div class ="piechart"> <ChartJsPieChart @ref="_pieChartJs" Config="@_config" Width="350" Height="340"/> </div> 
-    <div class ="barchart"> <ChartJsBarChart @ref="_barChartJs" Config="@barconfig" Width="600" Height="410" /> </div>
 @if (testdata == null){
     <p><em>Loading...</em></p>
 }
@@ -46,45 +52,39 @@ else{
     <table class="table">
         <thead>
             <tr>
-                <th>Last Assembly</th>
+                <th>Test Run Id</th>
+                <th>Test Case Id</th>
+                <th>Test Name</th>
+                <th>Test Created</th>
+                <th>Test Status</th>
+                <th>Image Path</th>
+                <th>Created By</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var data in testdata)
-            {
+            @foreach (var data in testdata){
+                @if(data.TestStatus == 1){
+                    testResult = "passed";     
+                }else{
+                    testResult = "failed"; 
+                }
+
                 <tr>
-                    <td>AssemblyId</td>
-                    <td>@data.TestRunId</td>
-                </tr>
-                <tr>
-                    <td>TestId</td>
+                    <td>@data.TestRunId</td> 
                     <td>@data.TestCaseId</td>
-                </tr>
-                <tr>
-                    <td>Test Time</td>
-                    <td>@data.CreatedBy</td>
-                </tr>
-                <tr>
-                    <td>Tester Name</td>
-                    <td>@data.CreatedBy</td>
-                </tr>
-                <tr>
-                    <td>Test Passed or Failed</td>
-                    <td>@data.TestStatus</td>
-                </tr>
-                <tr>
-                    <td>Failed Image Location</td>
+                    <td>@data.TestName</td>
+                    <td>@data.CreatedDate</td>
+                    <td>@testResult</td>
                     <td>@data.ImagePath</td>
-                </tr>
+                    <td>@data.CreatedBy</td>
+                </tr>   
             }
         </tbody>
     </table>
 }
-    <div class="footer"><SurveyPrompt Title="How is Blazor working for you?" /></div>
 </body>
 
 @code{
-
 #region 
 private TestData[] testdata;
 private PieConfig _config;
@@ -93,6 +93,7 @@ private PieDataset pieSet;
 private BarConfig barconfig;
 private ChartJsBarChart _barChartJs;
 private BarDataset<BarData> barSet;
+private string testResult; 
 #endregion
 
 protected override void OnInitialized(){
@@ -154,15 +155,15 @@ protected override void OnInitialized(){
     #endregion
 }
 protected override async Task OnInitializedAsync(){
-        testdata = await DataRetrieval.GetLastDataAsync(); 
-
+        testdata = await DataRetrieval.GetLastRunDataAsync(); 
+        
         double numberPassed = 0; 
         foreach(var data in testdata){
-            if(data.TestStatus == 0){
+            if(data.TestStatus == 1){
                 numberPassed++;
             }
     }
-    pieSet.Data.AddRange(new double[] { numberPassed, 5 - numberPassed });
+    pieSet.Data.AddRange(new double[] { numberPassed, testdata.Length - numberPassed });
     _config.Data.Datasets.Add(pieSet);
     }
 }

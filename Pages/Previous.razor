@@ -2,7 +2,7 @@
 
 @using BlazorApp.Data
 @inject TestDataRetrieval DataRetrieval
-<h1>Previous Tests</h1>
+<h1>Previous Test Run Outcomes</h1>
 
 @if (testdata == null)
 {
@@ -13,24 +13,26 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>test case</th>
-                <th>tester name</th>
-                <th>test date</th>
-                <th>test status</th>
-                <th>test id</th>
-                <th>image path</th>
+                <th>Test Run Id</th>
+                <th>Created Date</th>
+                <th>Tests Passed</th>
+                <th>Tests Failed</th>
+                <th>Created By</th>
+                <th>Application Name</th>
+                <th>Application Version</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var data in testdata)
             {
                 <tr>
-                    <td>@data.TestCaseId</td>
-                    <td>@data.CreatedBy</td>
-                    <td>@data.CreatedDate</td>
-                    <td>@data.TestStatus</td>
                     <td>@data.TestRunId</td>
-                    <td>@data.ImagePath</td>
+                    <td>@data.CreatedDate</td>
+                    <td>@data.TestsFailed</td>
+                    <td>@data.TestsPassed</td>
+                    <td>@data.CreatedBy</td>
+                    <td>@data.ApplicationName</td>
+                    <td>@data.ApplicationVersion</td> 
                 </tr>
             }
         </tbody>
@@ -42,6 +44,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        testdata = await DataRetrieval.GetPreviousDataAsync(); 
+        testdata = await DataRetrieval.GetPreviousRunsDataAsync(); 
     }
 }

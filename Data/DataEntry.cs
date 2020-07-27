@@ -1,9 +1,8 @@
-using System; 
-
-// namespace BlazorApp.Data{
-//     public class ExampleModel{
-//     [Required]
-//     [StringLength(10, ErrorMessage = "Name is too long.")]
-//     public string Name { get; set; }
-// }
-// }
+using System.ComponentModel.DataAnnotations;
+namespace BlazorApp.Data{
+    public class DataEntry{
+    [Required]
+    [StringLength(32, ErrorMessage = "Entry is too long.")]
+    public string Text { get; set; }  
+    }
+}
