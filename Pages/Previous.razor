@@ -13,24 +13,24 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>test</th>
-                <th>Test 2</th>
-                <th>Test 3 </th>
-                <th>test 4 </th>
-                <th>test 5 </th>
-                <th>test 6 </th>
+                <th>test case</th>
+                <th>tester name</th>
+                <th>test date</th>
+                <th>test status</th>
+                <th>test id</th>
+                <th>image path</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var data in testdata)
             {
                 <tr>
-                    <td>@data.TestId</td>
-                    <td>@data.Tester</td>
-                    <td>@data.TestTime</td>
+                    <td>@data.TestCaseId</td>
+                    <td>@data.CreatedBy</td>
+                    <td>@data.CreatedDate</td>
                     <td>@data.TestStatus</td>
-                    <td>@data.AssemblyId</td>
-                    <td>@data.ImageLocation</td>
+                    <td>@data.TestRunId</td>
+                    <td>@data.ImagePath</td>
                 </tr>
             }
         </tbody>

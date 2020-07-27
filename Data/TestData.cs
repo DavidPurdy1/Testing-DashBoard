@@ -3,6 +3,8 @@ using System;
 namespace BlazorApp.Data
 {
      public class TestData{
+        public int TestCaseId{ get; set; }
+        public int TestRunId{ get; set; }
         public int TestsFailed { get; set; }
         public int TestsPassed { get; set; }
         public string CreatedBy { get; set; }

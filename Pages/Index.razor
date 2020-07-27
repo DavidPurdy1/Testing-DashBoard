@@ -54,19 +54,19 @@ else{
             {
                 <tr>
                     <td>AssemblyId</td>
-                    <td>@data.AssemblyId</td>
+                    <td>@data.TestRunId</td>
                 </tr>
                 <tr>
                     <td>TestId</td>
-                    <td>@data.TestId</td>
+                    <td>@data.TestCaseId</td>
                 </tr>
                 <tr>
                     <td>Test Time</td>
-                    <td>@data.TestTime</td>
+                    <td>@data.CreatedBy</td>
                 </tr>
                 <tr>
                     <td>Tester Name</td>
-                    <td>@data.Tester</td>
+                    <td>@data.CreatedBy</td>
                 </tr>
                 <tr>
                     <td>Test Passed or Failed</td>
@@ -74,7 +74,7 @@ else{
                 </tr>
                 <tr>
                     <td>Failed Image Location</td>
-                    <td>@data.ImageLocation</td>
+                    <td>@data.ImagePath</td>
                 </tr>
             }
         </tbody>
@@ -158,7 +158,7 @@ protected override async Task OnInitializedAsync(){
 
         double numberPassed = 0; 
         foreach(var data in testdata){
-            if(data.TestStatus){
+            if(data.TestStatus == 0){
                 numberPassed++;
             }
     }

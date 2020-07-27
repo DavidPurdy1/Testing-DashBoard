@@ -7,30 +7,17 @@ using System.Configuration;
 
 namespace BlazorApp.Data
 {
-    public class TestDataRetrieval // make sure this can also just find the max results for the most recent test.
-    {
-        private int max;
+    public class TestDataRetrieval{  
         private string connectionString = ConfigurationManager.AppSettings.Get("DBConnection");
-
-        //Only getting one test from each assembly
         public Task<TestData[]> GetPreviousDataAsync(){
-            //max = GetMax();
-            return Task.FromResult(Enumerable.Range(1, 8).Select( index => new TestData{
-                AssemblyId = index,
-                //use AssemblyId to obtain other values
-                TestId = 199, 
-                TestTime = DateTime.Now.Date, 
-                TestStatus = true,
-                Tester = "david",
-                ImageLocation = "location",
-            }).ToArray());
+            return Task.FromResult(Enumerable.Range(1, 8).Select( index => GetRecentByTestRunId(index)).ToArray());
         }
         public Task<TestData[]> GetLastDataAsync(){
-            //max = GetMax();
-            return Task.FromResult(Enumerable.Range(1, 1).Select( index => GetTestDataFromSql(index) ).ToArray());
+            return Task.FromResult(Enumerable.Range(1, 1).Select( index => GetRecentByTestRunId(index)).ToArray());
         }
 
-        public TestData GetFromSql(int index){
+        public TestData GetRecentByTestRunId(int index){
+            Console.WriteLine(index);
             TestData data = new TestData();
             SqlConnection connection = new SqlConnection(connectionString); 
             connection.Open();
@@ -39,37 +26,37 @@ namespace BlazorApp.Data
             command.CommandTimeout = 60;
             command.Connection = connection;
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "";
+            command.CommandText = "spGetAllTestCasesByTestRunId";
 
+            //increments down by 2 each time from the most recent test run 
+            int recent = GetMaxTestRunId() - index * 2;
+
+            command.Parameters.Add("testRunId", SqlDbType.BigInt).Value = recent;
                 using (SqlDataReader reader = command.ExecuteReader()){
-                    while (reader.Read()){   
+                    while (reader.Read()){
+                        data.TestRunId = recent;
                         data.CreatedBy = reader["createdBy"].ToString(); 
-                        data.Tester = reader["Tester"].ToString();
-                        data.ImageLocation = reader["ImageLocation"].ToString();
-                        data.TestTime = DateTime.Parse(reader["TestTime"].ToString());
-                        data.TestId = int.Parse(reader["TestId"].ToString());
-                    }
+                        data.ImagePath = reader["imagePath"].ToString();
+                        data.CreatedDate = DateTime.Parse(reader["createdDate"].ToString());
+                        data.TestCaseId = int.Parse(reader["testCaseId"].ToString());;
+                        data.TestName = reader["testName"].ToString();
+                        data.TestStatus = int.Parse(reader["testStatusId"].ToString());
+                    }   
                     connection.Close();             
                 }
             return data;
         }
 
-        // public void GetMax(){
-        //     connectionString = ConfigurationManager.ConnectionStrings["i dont know what the connection is yet ? "].ToString();
-        //     using (SqlConnection connection = new SqlConnection(connectionString)){
-        //         //To get the max assembly number first, 
-        //         string queryString = "Select MAX(AssemblyId) as maximum from TABLE";
+        public int GetMaxTestRunId(){
+            SqlConnection connection = new SqlConnection(connectionString); 
+            connection.Open();
 
-        //         SqlCommand getMax = new SqlCommand(queryString, connection); 
-        //         connection.Open();
-
-        //         using (SqlDataReader reader = getMax.ExecuteReader()){
-        //             while (reader.Read()){    
-        //               // max = reader["AssemblyId"].ToString(); convert to int
-        //             }
-        //             connection.Close();
-        //         }
-        //     }
-        // }
+            SqlCommand command = new SqlCommand();
+            command.CommandTimeout = 60;
+            command.Connection = connection;
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "spGetMaxTestRunId";
+            return Convert.ToInt32(command.ExecuteScalar()); 
+        }
     }
 }

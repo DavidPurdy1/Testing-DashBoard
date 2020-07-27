@@ -67,3 +67,5 @@ C:\Users\i00018\source\repos\BlazorApp\bin\Debug\netcoreapp3.1\runtimes\win\lib\
 C:\Users\i00018\source\repos\BlazorApp\bin\Debug\netcoreapp3.1\BlazorApp.StaticWebAssets.xml
 C:\Users\i00018\source\repos\BlazorApp\bin\Debug\netcoreapp3.1\ChartJs.Blazor.dll
 C:\Users\i00018\source\repos\BlazorApp\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+C:\Users\i00018\source\repos\BlazorApp\bin\Debug\netcoreapp3.1\app.config
+C:\Users\i00018\source\repos\BlazorApp\bin\Debug\netcoreapp3.1\BlazorApp.dll.config
