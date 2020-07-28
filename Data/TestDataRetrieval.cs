@@ -9,12 +9,17 @@ namespace BlazorApp.Data
 {
     public class TestDataRetrieval{  
         private string connectionString = ConfigurationManager.AppSettings.Get("DBConnection");
-        public int SearchId = 36;   
+        public int SearchId = 36;
+        public int HomeId = 0;   
         public Task<TestData[]> GetPreviousRunsDataAsync(){
             return Task.FromResult(Enumerable.Range(1, 15).Select( index => GetRecentRunsByTestRunId(index)).ToArray());
         }
         public Task<TestData[]> GetLastRunDataAsync(){
-            return Task.FromResult(Enumerable.Range(1, GetTestCaseCount(GetMaxTestRunId())).Select( index => GetRecentCasesByTestRunId(index)).ToArray());
+            if(HomeId==0){
+               return Task.FromResult(Enumerable.Range(1, GetTestCaseCount(GetMaxTestRunId())).Select( index => GetRecentCasesByTestRunId(index)).ToArray()); 
+            }else{
+               return Task.FromResult(Enumerable.Range(1, GetTestCaseCount(HomeId)).Select( index => GetRecentCasesByTestRunId(index, HomeId)).ToArray()); 
+            }
         }
         public Task<TestData[]> GetSearchDataAsync(){
             return Task.FromResult(Enumerable.Range(1,GetTestCaseCount(SearchId)).Select( index => SearchDB(SearchId, index)).ToArray());
@@ -29,9 +34,37 @@ namespace BlazorApp.Data
             command.Connection = connection;
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "spGetAllTestCasesByTestRunId";
-
             //max test run
             int recent = GetMaxTestRunId();
+            int increment = GetTestCaseId(recent) - index; 
+            command.Parameters.Add("testRunId", SqlDbType.BigInt).Value = recent;
+                using (SqlDataReader reader = command.ExecuteReader()){
+                    while (reader.Read()){
+                        data.TestRunId = recent;
+                        data.CreatedBy = reader["createdBy"].ToString(); 
+                        data.ImagePath = reader["imagePath"].ToString();
+                        data.CreatedDate = DateTime.Parse(reader["createdDate"].ToString());
+                        data.TestCaseId = increment;
+                        data.TestName = reader["testName"].ToString();
+                        data.TestStatus = int.Parse(reader["testStatusId"].ToString());
+                    }   
+                    reader.Close(); 
+                    connection.Close();             
+                }
+            return data;
+        }
+         public TestData GetRecentCasesByTestRunId(int index, int HomeId){
+            TestData data = new TestData();
+            SqlConnection connection = new SqlConnection(connectionString); 
+            connection.Open();
+
+            SqlCommand command = new SqlCommand();
+            command.CommandTimeout = 60;
+            command.Connection = connection;
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "spGetAllTestCasesByTestRunId";
+            //max test run
+            int recent = HomeId;
             int increment = GetTestCaseId(recent) - index; 
             command.Parameters.Add("testRunId", SqlDbType.BigInt).Value = recent;
                 using (SqlDataReader reader = command.ExecuteReader()){

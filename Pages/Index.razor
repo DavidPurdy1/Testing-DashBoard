@@ -28,21 +28,31 @@
        margin-top: 380px;
    }
    .table{
-       position: fixed;
        margin-top:0px;
-       margin-left: 600px;
-       width: 625px; 
+       margin-left: 400px;
+       width: 900px; 
    }
    .td{
         padding-top: 12px;
         padding-bottom: 12px;
-        word-wrap: none;
+        word-wrap: break-word;
         word-break: keep-all;
    }
-   
+   .entry{
+       margin-left: 600px; 
+   }
 </style>
 </head>
-<h1>DashBoard Home</h1>
+<h1>Test DashBoard Home 
+    <div class ="entry">
+    <EditForm Model="@entry" OnValidSubmit = "ValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary/>
+    <InputText id="entry" @bind-Value="entry.Text" />
+    <button class="searchb" @onclick="OnInitializedAsync">Search</button>
+   </EditForm>
+   </div>
+   </h1>
 <body>
     <div class ="piechart"> <ChartJsPieChart @ref="_pieChartJs" Config="@_config" Width="350" Height="340"/> </div> 
 @if (testdata == null){
@@ -85,6 +95,7 @@ else{
 </body>
 
 @code{
+
 #region 
 private TestData[] testdata;
 private PieConfig _config;
@@ -94,8 +105,11 @@ private BarConfig barconfig;
 private ChartJsBarChart _barChartJs;
 private BarDataset<BarData> barSet;
 private string testResult; 
+DataEntry entry = new DataEntry(); 
 #endregion
-
+public void ValidSubmit(){
+    Console.WriteLine("valid submit");
+}
 protected override void OnInitialized(){
 
     #region 
@@ -105,7 +119,7 @@ protected override void OnInitialized(){
             
             Title = new OptionsTitle{
                 Display = true,
-                Text = "Last Assembly Results"
+                Text = "Last Test Run Results"
             },
             Responsive = true, 
              Animation = new ArcAnimation{
@@ -134,7 +148,7 @@ protected override void OnInitialized(){
             },
             Title = new OptionsTitle{
                 Display = true,
-                Text = "Previous Assembly results"
+                Text = "Previous Test Run results"
             },
             Responsive = true, 
              Animation = new ArcAnimation{
@@ -155,6 +169,13 @@ protected override void OnInitialized(){
     #endregion
 }
 protected override async Task OnInitializedAsync(){
+        if(entry.Text != null){
+            try{
+              DataRetrieval.HomeId = int.Parse(entry.Text);  
+            }catch(Exception){
+                Console.WriteLine("Inproper Entry");
+            }
+        }
         testdata = await DataRetrieval.GetLastRunDataAsync(); 
         
         double numberPassed = 0; 
@@ -162,6 +183,9 @@ protected override async Task OnInitializedAsync(){
             if(data.TestStatus == 1){
                 numberPassed++;
             }
+    }
+    if(pieSet.Data.Count > 0){
+        pieSet.Data.Clear();
     }
     pieSet.Data.AddRange(new double[] { numberPassed, testdata.Length - numberPassed });
     _config.Data.Datasets.Add(pieSet);

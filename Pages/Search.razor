@@ -9,6 +9,7 @@
     <InputText id="entry" @bind-Value="entry.Text" />
     <button class="search" @onclick="OnInitializedAsync">Search</button>
 </EditForm>
+
 <p> Search for different test cases by Test Run Id </p>
 @if (testdata == null){
     <p><em>Loading...</em></p>
@@ -50,7 +51,7 @@ else{
     string testResult = "";
     private DataEntry entry = new DataEntry();
     private void ValidSubmit(){
-        Console.WriteLine("Valid Submit");
+        //Console.WriteLine("Valid Submit");
     }
      protected override async Task OnInitializedAsync(){
         if(entry.Text != null){

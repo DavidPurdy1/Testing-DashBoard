@@ -243,14 +243,14 @@
       },
       {
         "Kind": "Components.Component",
-        "Name": "BlazorApp.Pages.Search",
+        "Name": "BlazorApp.Pages.Error",
         "AssemblyName": "BlazorApp",
         "Documentation": null,
         "TagOutputHint": null,
         "CaseSensitive": true,
         "TagMatchingRules": [
           {
-            "TagName": "Search",
+            "TagName": "Error",
             "ParentTag": null,
             "TagStructure": 0,
             "Attributes": [],
@@ -262,19 +262,19 @@
         "Diagnostics": [],
         "Metadata": {
           "Runtime.Name": "Components.IComponent",
-          "Common.TypeName": "BlazorApp.Pages.Search"
+          "Common.TypeName": "BlazorApp.Pages.Error"
         }
       },
       {
         "Kind": "Components.Component",
-        "Name": "BlazorApp.Pages.Search",
+        "Name": "BlazorApp.Pages.Error",
         "AssemblyName": "BlazorApp",
         "Documentation": null,
         "TagOutputHint": null,
         "CaseSensitive": true,
         "TagMatchingRules": [
           {
-            "TagName": "BlazorApp.Pages.Search",
+            "TagName": "BlazorApp.Pages.Error",
             "ParentTag": null,
             "TagStructure": 0,
             "Attributes": [],
@@ -286,7 +286,7 @@
         "Diagnostics": [],
         "Metadata": {
           "Runtime.Name": "Components.IComponent",
-          "Common.TypeName": "BlazorApp.Pages.Search",
+          "Common.TypeName": "BlazorApp.Pages.Error",
           "Components.NameMatch": "Components.FullyQualifiedNameMatch"
         }
       },
@@ -390,14 +390,14 @@
       },
       {
         "Kind": "Components.Component",
-        "Name": "BlazorApp.Pages.Error",
+        "Name": "BlazorApp.Pages.Search",
         "AssemblyName": "BlazorApp",
         "Documentation": null,
         "TagOutputHint": null,
         "CaseSensitive": true,
         "TagMatchingRules": [
           {
-            "TagName": "Error",
+            "TagName": "Search",
             "ParentTag": null,
             "TagStructure": 0,
             "Attributes": [],
@@ -409,19 +409,19 @@
         "Diagnostics": [],
         "Metadata": {
           "Runtime.Name": "Components.IComponent",
-          "Common.TypeName": "BlazorApp.Pages.Error"
+          "Common.TypeName": "BlazorApp.Pages.Search"
         }
       },
       {
         "Kind": "Components.Component",
-        "Name": "BlazorApp.Pages.Error",
+        "Name": "BlazorApp.Pages.Search",
         "AssemblyName": "BlazorApp",
         "Documentation": null,
         "TagOutputHint": null,
         "CaseSensitive": true,
         "TagMatchingRules": [
           {
-            "TagName": "BlazorApp.Pages.Error",
+            "TagName": "BlazorApp.Pages.Search",
             "ParentTag": null,
             "TagStructure": 0,
             "Attributes": [],
@@ -433,7 +433,7 @@
         "Diagnostics": [],
         "Metadata": {
           "Runtime.Name": "Components.IComponent",
-          "Common.TypeName": "BlazorApp.Pages.Error",
+          "Common.TypeName": "BlazorApp.Pages.Search",
           "Components.NameMatch": "Components.FullyQualifiedNameMatch"
         }
       },
