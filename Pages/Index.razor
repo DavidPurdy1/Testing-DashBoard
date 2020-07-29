@@ -5,14 +5,14 @@
 @using ChartJs.Blazor.ChartJS.PieChart
 @using ChartJs.Blazor.ChartJS.Common.Properties
 @using BlazorApp.Data
+@using Microsoft.JSInterop
 @inject TestDataRetrieval DataRetrieval
-
+@inject IJSRuntime JSRuntime;
 <html>
 <head>
  <style type ="text/css" >
    .piechart{
-       bottom: 200;
-       right: 800;
+       position: absolute;
    }
    .table{
        margin-top:0px;
@@ -26,10 +26,17 @@
         word-break: keep-all;
    }
    .entry{
-       margin-left: 450px; 
+       margin-left: 425px; 
    }
    .searchmethod{
        margin-left: 700px;
+   }
+   .dot{
+    height: 20px;
+    width: 20px;
+    background-color: "@color";
+    border-radius: 50%;
+    display: inline-block;
    }
 </style>
 </head>
@@ -40,6 +47,7 @@
     <DataAnnotationsValidator />
     <ValidationSummary/>
     <InputText id="entry" @bind-Value="entry.Text"/>
+
     <button class="searchb" @onclick="OnInitializedAsync">Search</button>
     <input type="radio" name="method" value="" @onclick="ByTestRunId">Test Run Id 
     <input type="radio" name="method" value="" @onclick = "ByTestCaseId">Test Case Id 
@@ -56,6 +64,7 @@ else{
     <table class="table">
         <thead>
             <tr>
+                <th> </th>
                 <th>Test Run Id</th>
                 <th>Test Case Id</th>
                 <th>Test Name</th>
@@ -74,6 +83,7 @@ else{
                 }
 
                 <tr>
+                    <td><span class="dot" id="dot"></span></td>
                     <td>@data.TestRunId</td> 
                     <td>@data.TestCaseId</td>
                     <td>@data.TestName</td>
@@ -97,20 +107,20 @@ private PieConfig _config;
 private ChartJsPieChart _pieChartJs;
 private PieDataset pieSet;
 private string testResult; 
-DataEntry entry = new DataEntry(); 
+DataEntry entry = new DataEntry();
+string color;  
 #endregion
 
 public void ValidSubmit(){
-    Console.WriteLine("valid submit");
+    Console.WriteLine(entry.Text + " is a valid submit");
 }
 protected override void OnInitialized(){ 
     _config = new PieConfig{
         Options = new PieOptions{
-            MaintainAspectRatio = false,
-            
+            MaintainAspectRatio = false, 
             Title = new OptionsTitle{
                 Display = true,
-                Text = "Last Test Run Results"
+                Text = "Test Case Results"
             },
             Responsive = true, 
              Animation = new ArcAnimation{
@@ -167,5 +177,4 @@ private void ByTestDate(){
 private void ByTestName(){
     DataRetrieval.searchMethod = 4;
 }
-
 }

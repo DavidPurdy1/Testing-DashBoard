@@ -25,7 +25,6 @@
       "BlazorApp/1.0.0": {
         "dependencies": {
           "ChartJs.Blazor": "1.1.0",
-          "Radzen.Blazor": "2.11.3",
           "System.Configuration.ConfigurationManager": "4.7.0",
           "System.Data.SqlClient": "4.8.1",
           "Microsoft.AspNetCore.Antiforgery": "3.1.0.0",
@@ -402,23 +401,6 @@
           "lib/netstandard2.0/Newtonsoft.Json.dll": {}
         }
       },
-      "Radzen.Blazor/2.11.3": {
-        "dependencies": {
-          "Microsoft.AspNetCore.Components": "3.1.0",
-          "Microsoft.AspNetCore.Components.Web": "3.1.0",
-          "Microsoft.CSharp": "4.7.0",
-          "System.Linq.Dynamic.Core": "1.0.19"
-        },
-        "runtime": {
-          "lib/netstandard2.1/Radzen.Blazor.dll": {
-            "assemblyVersion": "2.11.3.0",
-            "fileVersion": "2.11.3.0"
-          }
-        },
-        "compile": {
-          "lib/netstandard2.1/Radzen.Blazor.dll": {}
-        }
-      },
       "runtime.native.System.Data.SqlClient.sni/4.7.0": {
         "dependencies": {
           "runtime.win-arm64.runtime.native.System.Data.SqlClient.sni": "4.4.0",
@@ -502,17 +484,6 @@
         "dependencies": {
           "Microsoft.NETCore.Platforms": "3.1.0",
           "Microsoft.Win32.SystemEvents": "4.7.0"
-        }
-      },
-      "System.Linq.Dynamic.Core/1.0.19": {
-        "runtime": {
-          "lib/netcoreapp2.1/System.Linq.Dynamic.Core.dll": {
-            "assemblyVersion": "1.0.19.0",
-            "fileVersion": "1.0.19.0"
-          }
-        },
-        "compile": {
-          "lib/netcoreapp2.1/System.Linq.Dynamic.Core.dll": {}
         }
       },
       "System.Security.AccessControl/4.7.0": {
@@ -2375,13 +2346,6 @@
       "path": "newtonsoft.json/12.0.3",
       "hashPath": "newtonsoft.json.12.0.3.nupkg.sha512"
     },
-    "Radzen.Blazor/2.11.3": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-fbKm05x/mOwVMnkkE7x9ckylgRegCyfPu2GCaofT5P2w1I2vEwKk/RjbKtbVAaM6TgVk48HCS/Z5QZYyN3f6+Q==",
-      "path": "radzen.blazor/2.11.3",
-      "hashPath": "radzen.blazor.2.11.3.nupkg.sha512"
-    },
     "runtime.native.System.Data.SqlClient.sni/4.7.0": {
       "type": "package",
       "serviceable": true,
@@ -2430,13 +2394,6 @@
       "sha512": "sha512-v+XbyYHaZjDfn0ENmJEV1VYLgGgCTx1gnfOBcppowbpOAriglYgGCvFCPr2EEZyBvXlpxbEsTwkOlInl107ahA==",
       "path": "system.drawing.common/4.7.0",
       "hashPath": "system.drawing.common.4.7.0.nupkg.sha512"
-    },
-    "System.Linq.Dynamic.Core/1.0.19": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-GFYslLz/1ZZ0+gbqYED2zlD0H95BIK4hOpIcEEEfTDDXAcKE5vpXQQseOGduNVjcJZOF3Wx+4npa2EjdFpuDgA==",
-      "path": "system.linq.dynamic.core/1.0.19",
-      "hashPath": "system.linq.dynamic.core.1.0.19.nupkg.sha512"
     },
     "System.Security.AccessControl/4.7.0": {
       "type": "package",

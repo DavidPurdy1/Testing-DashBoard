@@ -18,7 +18,7 @@ namespace BlazorApp.Data
             return Task.FromResult(Enumerable.Range(1, 15).Select( index => GetRecentRunsByTestRunId(index)).ToArray());
         }
         public Task<TestData[]> GetHomeRunDataAsync(){ //home page
-            if(HomePageSearchId==0){ //when nothing is entered in the blank, most recent test
+            if(HomePageSearchId==0 && HomePageSearchString == ""){ //when nothing is entered in the blank, most recent test
                 Console.WriteLine("nothing entered, max"); 
                 return Task.FromResult(Enumerable.Range(1, GetTestCaseCount(GetMaxTestRunId())).Select( index => GetMostRecentCasesByTestRunId(index)).ToArray()); 
             }else if(searchMethod == 1){ // if search method is 1 use entered test run id 
@@ -29,10 +29,10 @@ namespace BlazorApp.Data
                 return Task.FromResult(Enumerable.Range(1, 1).Select( index => GetCaseByTestCaseId(index, HomePageSearchId)).ToArray());
             }else if(searchMethod == 3){ // if search method is 3 use entered date 
                 Console.WriteLine("search by date");
-                return Task.FromResult(Enumerable.Range(1, GetTestCaseCountByDate(HomePageSearchString)).Select( index => GetCasesByDate(index, HomePageSearchString)).ToArray());
+                return Task.FromResult(Enumerable.Range(1, GetTestCaseCountByDate(HomePageSearchString)).Select( index => GetCasesByDate(index-1, HomePageSearchString)).ToArray());
             }else if(searchMethod == 4){ // if search method is 4 use entered test name 
                 Console.WriteLine("search by test name");
-                return Task.FromResult(Enumerable.Range(1, GetTestCaseCountByTestName(HomePageSearchString)).Select( index => GetCasesByTestName(index, HomePageSearchString)).ToArray());
+                return Task.FromResult(Enumerable.Range(1, GetTestCaseCountByTestName(HomePageSearchString)).Select( index => GetCasesByTestName(index-1, HomePageSearchString)).ToArray());
             }else{ //else return to the latest test
                 Console.WriteLine("Unexpected");
                 return Task.FromResult(Enumerable.Range(1, GetTestCaseCount(GetMaxTestRunId())).Select( index => GetMostRecentCasesByTestRunId(index)).ToArray());  
@@ -173,17 +173,23 @@ namespace BlazorApp.Data
             //increments down by 2 each time from the most recent test run 
             DateTime recent = DateTime.Parse(HomePageSearchString);
 
-            command.Parameters.Add("CreatedDate", SqlDbType.BigInt).Value = recent;
+            command.Parameters.Add("createdDate", SqlDbType.DateTime).Value = recent;
                 using (SqlDataReader reader = command.ExecuteReader()){
-                    while (reader.Read()){
-                        data.TestCaseId = int.Parse(reader["testCaseId"].ToString()); 
-                        data.CreatedBy = reader["createdBy"].ToString(); 
-                        data.ImagePath = reader["imagePath"].ToString();
-                        data.TestRunId = int.Parse(reader["testRunId"].ToString()); 
-                        data.TestName = reader["testName"].ToString();
-                        data.TestStatus = int.Parse(reader["testStatusId"].ToString());
-                        data.CreatedDate = recent;
-                    }   
+                    DataTable table = new DataTable(); 
+                    table.Load(reader); 
+                        data.TestCaseId =int.Parse(table.Rows[index]["testCaseId"].ToString());
+                        data.CreatedBy = table.Rows[index]["createdBy"].ToString(); 
+                        data.ImagePath = table.Rows[index]["imagePath"].ToString(); 
+                        data.TestRunId = int.Parse(table.Rows[index]["testRunId"].ToString()); 
+                        data.TestName = table.Rows[index]["testName"].ToString(); 
+                        data.TestStatus = int.Parse(table.Rows[index]["testStatusId"].ToString()); 
+                        // data.TestCaseId = int.Parse(reader["testCaseId"].ToString()); 
+                        // data.CreatedBy = reader["createdBy"].ToString(); 
+                        // data.ImagePath = reader["imagePath"].ToString();
+                        // data.TestRunId = int.Parse(reader["testRunId"].ToString()); 
+                        // data.TestName = reader["testName"].ToString();
+                        // data.TestStatus = int.Parse(reader["testStatusId"].ToString());
+                        data.CreatedDate = recent;   
                     reader.Close();
                     connection.Close();             
                 }
@@ -203,17 +209,26 @@ namespace BlazorApp.Data
             //increments down by 2 each time from the most recent test run 
             string recent = HomePageSearchString; 
 
-            command.Parameters.Add("testRunId", SqlDbType.BigInt).Value = recent;
+            command.Parameters.Add("testName", SqlDbType.NVarChar).Value = recent;
                 using (SqlDataReader reader = command.ExecuteReader()){
-                    while (reader.Read()){
-                        data.TestRunId = int.Parse(reader["testRunId"].ToString());
-                        data.CreatedBy = reader["createdBy"].ToString(); 
-                        data.ImagePath = reader["imagePath"].ToString();
-                        data.CreatedDate = DateTime.Parse(reader["createdDate"].ToString());
-                        data.TestCaseId = int.Parse(reader["testCaseId"].ToString());
+                    DataTable table = new DataTable(); 
+                    table.Load(reader);
+                        data.TestCaseId = int.Parse(table.Rows[index]["testCaseId"].ToString());
+                        data.CreatedBy = table.Rows[index]["createdBy"].ToString(); 
+                        data.ImagePath = table.Rows[index]["imagePath"].ToString(); 
+                        data.TestRunId = int.Parse(table.Rows[index]["testRunId"].ToString()); 
                         data.TestName = recent; 
-                        data.TestStatus = int.Parse(reader["testStatusId"].ToString());
-                    }   
+                        data.CreatedDate = DateTime.Parse(table.Rows[index]["createdDate"].ToString());
+                        data.TestStatus = int.Parse(table.Rows[index]["testStatusId"].ToString()); 
+                    // while (reader.Read()){
+                    //     data.TestRunId = int.Parse(reader["testRunId"].ToString());
+                    //     data.CreatedBy = reader["createdBy"].ToString(); 
+                    //     data.ImagePath = reader["imagePath"].ToString();
+                    //     data.CreatedDate = DateTime.Parse(reader["createdDate"].ToString());
+                    //     data.TestCaseId = int.Parse(reader["testCaseId"].ToString());
+                    //     data.TestName = recent; 
+                    //     data.TestStatus = int.Parse(reader["testStatusId"].ToString());
+                    // }   
                     reader.Close();
                     connection.Close();             
                 }
@@ -257,7 +272,7 @@ namespace BlazorApp.Data
             command.Connection = connection;
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "spGetTestCaseCountByDate";
-            command.Parameters.Add("createdDate", SqlDbType.BigInt).Value = DateTime.Parse(HomePageSearchString);
+            command.Parameters.Add("createdDate", SqlDbType.DateTime).Value = DateTime.Parse(HomePageSearchString);
             int value = Convert.ToInt32(command.ExecuteScalar());
             connection.Close(); 
             return value; 
@@ -271,7 +286,7 @@ namespace BlazorApp.Data
             command.Connection = connection;
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "spGetTestCaseCountByTestName";
-            command.Parameters.Add("testName", SqlDbType.BigInt).Value = HomePageSearchString;
+            command.Parameters.Add("testName", SqlDbType.NVarChar).Value = HomePageSearchString;
             int value = Convert.ToInt32(command.ExecuteScalar());
             connection.Close(); 
             return value; 
