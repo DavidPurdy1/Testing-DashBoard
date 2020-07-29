@@ -30,7 +30,17 @@
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
-
+    <script> 
+        function displayRadioValue() { 
+            var ele = document.getElementsByName('gender'); 
+              
+            for(i = 0; i < ele.length; i++) { 
+                if(ele[i].checked) 
+                document.getElementById("result").innerHTML
+                        = "Gender: "+ele[i].value; 
+            } 
+        } 
+    </script> 
     <script src="_framework/blazor.server.js"></script>
 
     @*References for ChartJs*@
@@ -38,6 +48,5 @@
     <script src="_content/ChartJs.Blazor/Chart.min.js" type="text/javascript" language="javascript"></script>
     <script src="_content/ChartJs.Blazor/ChartJsBlazorInterop.js" type="text/javascript" language="javascript"></script>
     <link rel="stylesheet" href="_content/ChartJs.Blazor/ChartJSBlazor.css" />
-
 </body>
 </html>

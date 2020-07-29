@@ -3,29 +3,16 @@
 
 @using ChartJs.Blazor.Charts
 @using ChartJs.Blazor.ChartJS.PieChart
-@using ChartJs.Blazor.ChartJS.BarChart
 @using ChartJs.Blazor.ChartJS.Common.Properties
-@using ChartJs.Blazor.Util
 @using BlazorApp.Data
 @inject TestDataRetrieval DataRetrieval
 
+<html>
 <head>
  <style type ="text/css" >
-   .footer{ 
-       position: fixed;     
-       text-align: left;    
-       bottom: 0px; 
-       width: 80%;
-   }
    .piechart{
-       position: fixed;
        bottom: 200;
        right: 800;
-   }
-   .barchart{
-       position: fixed;
-       margin-left: 0px;
-       margin-top: 380px;
    }
    .table{
        margin-top:0px;
@@ -39,20 +26,27 @@
         word-break: keep-all;
    }
    .entry{
-       margin-left: 600px; 
+       margin-left: 450px; 
+   }
+   .searchmethod{
+       margin-left: 700px;
    }
 </style>
 </head>
-<h1>Test DashBoard Home 
-    <div class ="entry">
+<h1>Test DashBoard Home </h1>
+
+   <div class ="entry">
     <EditForm Model="@entry" OnValidSubmit = "ValidSubmit">
     <DataAnnotationsValidator />
     <ValidationSummary/>
-    <InputText id="entry" @bind-Value="entry.Text" />
+    <InputText id="entry" @bind-Value="entry.Text"/>
     <button class="searchb" @onclick="OnInitializedAsync">Search</button>
-   </EditForm>
+    <input type="radio" name="method" value="" @onclick="ByTestRunId">Test Run Id 
+    <input type="radio" name="method" value="" @onclick = "ByTestCaseId">Test Case Id 
+    <input type="radio" name="method" value="" @onclick = "ByTestDate">Test Date
+    <input type="radio" name="method" value="" @onclick = "ByTestName">Test Name
+    </EditForm>
    </div>
-   </h1>
 <body>
     <div class ="piechart"> <ChartJsPieChart @ref="_pieChartJs" Config="@_config" Width="350" Height="340"/> </div> 
 @if (testdata == null){
@@ -93,26 +87,23 @@ else{
     </table>
 }
 </body>
+</html>
 
-@code{
+@code{ //*******************************
 
 #region 
 private TestData[] testdata;
 private PieConfig _config;
 private ChartJsPieChart _pieChartJs;
 private PieDataset pieSet;
-private BarConfig barconfig;
-private ChartJsBarChart _barChartJs;
-private BarDataset<BarData> barSet;
 private string testResult; 
 DataEntry entry = new DataEntry(); 
 #endregion
+
 public void ValidSubmit(){
     Console.WriteLine("valid submit");
 }
-protected override void OnInitialized(){
-
-    #region 
+protected override void OnInitialized(){ 
     _config = new PieConfig{
         Options = new PieOptions{
             MaintainAspectRatio = false,
@@ -137,46 +128,19 @@ protected override void OnInitialized(){
         HoverBorderWidth = 1,
         BorderColor = "#ffffff",
     };
-    #endregion
-
-    #region 
-    barconfig = new BarConfig{
-        Options = new BarOptions{
-            MaintainAspectRatio = false,
-            Scales = new BarScales{
-
-            },
-            Title = new OptionsTitle{
-                Display = true,
-                Text = "Previous Test Run results"
-            },
-            Responsive = true, 
-             Animation = new ArcAnimation{
-                AnimateRotate = true,
-                AnimateScale = true
-            } 
-        }
-    };
-
-    barSet = new BarDataset<BarData>{
-        BackgroundColor = new[] { ColorUtil.RandomColorString(), ColorUtil.RandomColorString(), ColorUtil.RandomColorString(), ColorUtil.RandomColorString() },
-        BorderWidth = 0,
-        HoverBackgroundColor = ColorUtil.RandomColorString(),
-        HoverBorderColor = ColorUtil.RandomColorString(),
-        HoverBorderWidth = 1,
-        BorderColor = "#ffffff",
-    };
-    #endregion
 }
 protected override async Task OnInitializedAsync(){
         if(entry.Text != null){
             try{
-              DataRetrieval.HomeId = int.Parse(entry.Text);  
+                if(!int.TryParse(entry.Text, out DataRetrieval.HomePageSearchId)){
+                    DataRetrieval.HomePageSearchString = entry.Text; 
+                }
             }catch(Exception){
                 Console.WriteLine("Inproper Entry");
             }
         }
-        testdata = await DataRetrieval.GetLastRunDataAsync(); 
+        Console.Write(DataRetrieval.searchMethod + " "); 
+        testdata = await DataRetrieval.GetHomeRunDataAsync(); 
         
         double numberPassed = 0; 
         foreach(var data in testdata){
@@ -190,4 +154,18 @@ protected override async Task OnInitializedAsync(){
     pieSet.Data.AddRange(new double[] { numberPassed, testdata.Length - numberPassed });
     _config.Data.Datasets.Add(pieSet);
     }
+
+private void ByTestRunId(){
+    DataRetrieval.searchMethod = 1;
+}
+private void ByTestCaseId(){
+    DataRetrieval.searchMethod = 2;
+}
+private void ByTestDate(){
+    DataRetrieval.searchMethod = 3;
+}
+private void ByTestName(){
+    DataRetrieval.searchMethod = 4;
+}
+
 }

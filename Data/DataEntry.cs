@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+
 namespace BlazorApp.Data{
     public class DataEntry{
     [Required]

@@ -13,6 +13,15 @@
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
   </PropertyGroup>
   <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Content Include="$(NuGetPackageRoot)radzen.blazor\2.11.3\contentFiles\any\netstandard2.1\Properties\launchSettings.json" Condition="Exists('$(NuGetPackageRoot)radzen.blazor\2.11.3\contentFiles\any\netstandard2.1\Properties\launchSettings.json')">
+      <NuGetPackageId>Radzen.Blazor</NuGetPackageId>
+      <NuGetPackageVersion>2.11.3</NuGetPackageVersion>
+      <NuGetItemType>Content</NuGetItemType>
+      <Private>False</Private>
+      <Link>Properties\launchSettings.json</Link>
+    </Content>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
     <Content Include="$(NuGetPackageRoot)chartjs.blazor\1.1.0\contentFiles\any\netstandard2.1\Properties\launchSettings.json" Condition="Exists('$(NuGetPackageRoot)chartjs.blazor\1.1.0\contentFiles\any\netstandard2.1\Properties\launchSettings.json')">
       <NuGetPackageId>ChartJs.Blazor</NuGetPackageId>
       <NuGetPackageVersion>1.1.0</NuGetPackageVersion>
@@ -22,6 +31,7 @@
     </Content>
   </ItemGroup>
   <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Import Project="$(NuGetPackageRoot)radzen.blazor\2.11.3\buildTransitive\Radzen.Blazor.props" Condition="Exists('$(NuGetPackageRoot)radzen.blazor\2.11.3\buildTransitive\Radzen.Blazor.props')" />
     <Import Project="$(NuGetPackageRoot)chartjs.blazor\1.1.0\buildTransitive\ChartJs.Blazor.props" Condition="Exists('$(NuGetPackageRoot)chartjs.blazor\1.1.0\buildTransitive\ChartJs.Blazor.props')" />
   </ImportGroup>
 </Project>

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "/ltBc3LYmCoXwMMz9V00Lr+5cZk7OePGv+I7De0JB7t6xztNkbNkbbzG1TVFZX1iEXBYOuoZxSK/whVx6ddTSg==",
+  "dgSpecHash": "us8ddGxSmPA4C1kPVlzlCjpGSDQNl3gRC8YHE+o4O2jvnRGeKDuinOurBNp/qGMpdQ2K+LmuiMmVKVxPWqX8vw==",
   "success": true,
   "projectFilePath": "C:\\Users\\i00018\\source\\repos\\BlazorApp\\BlazorApp.csproj",
   "expectedPackageFiles": [
@@ -22,6 +22,7 @@
     "C:\\Users\\i00018\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
     "C:\\Users\\i00018\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
     "C:\\Users\\i00018\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
+    "C:\\Users\\i00018\\.nuget\\packages\\radzen.blazor\\2.11.3\\radzen.blazor.2.11.3.nupkg.sha512",
     "C:\\Users\\i00018\\.nuget\\packages\\runtime.native.system.data.sqlclient.sni\\4.7.0\\runtime.native.system.data.sqlclient.sni.4.7.0.nupkg.sha512",
     "C:\\Users\\i00018\\.nuget\\packages\\runtime.win-arm64.runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.win-arm64.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",
     "C:\\Users\\i00018\\.nuget\\packages\\runtime.win-x64.runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.win-x64.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",
@@ -29,6 +30,7 @@
     "C:\\Users\\i00018\\.nuget\\packages\\system.configuration.configurationmanager\\4.7.0\\system.configuration.configurationmanager.4.7.0.nupkg.sha512",
     "C:\\Users\\i00018\\.nuget\\packages\\system.data.sqlclient\\4.8.1\\system.data.sqlclient.4.8.1.nupkg.sha512",
     "C:\\Users\\i00018\\.nuget\\packages\\system.drawing.common\\4.7.0\\system.drawing.common.4.7.0.nupkg.sha512",
+    "C:\\Users\\i00018\\.nuget\\packages\\system.linq.dynamic.core\\1.0.19\\system.linq.dynamic.core.1.0.19.nupkg.sha512",
     "C:\\Users\\i00018\\.nuget\\packages\\system.security.accesscontrol\\4.7.0\\system.security.accesscontrol.4.7.0.nupkg.sha512",
     "C:\\Users\\i00018\\.nuget\\packages\\system.security.cryptography.protecteddata\\4.7.0\\system.security.cryptography.protecteddata.4.7.0.nupkg.sha512",
     "C:\\Users\\i00018\\.nuget\\packages\\system.security.permissions\\4.7.0\\system.security.permissions.4.7.0.nupkg.sha512",
