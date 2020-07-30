@@ -4,7 +4,14 @@
 @inject TestDataRetrieval DataRetrieval
 
 <h1>Previous Test Run Outcomes</h1>
-
+ <div class ="entry">
+    <EditForm Model="@entry" OnValidSubmit = "ValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary/>
+    <InputText id="entry" @bind-Value="entry.Text"/>
+    <button class="searchb" @onclick="OnInitializedAsync">Search</button> <p>Enter how many previous runs</p>
+    </EditForm>
+ </div>
 @if (testdata == null){
     <p><em>Loading...</em></p>
 }else{
@@ -37,7 +44,20 @@
 }
 @code {
     private TestData[] testdata;
-    protected override async Task OnInitializedAsync(){
-        testdata = await DataRetrieval.GetPreviousRunsDataAsync(); 
+    private DataEntry entry = new DataEntry();
+    public void ValidSubmit()
+    {
+        Console.WriteLine("Valid Submit " + entry.Text);
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        if (entry.Text != null)
+        {
+            if (!int.TryParse(entry.Text, out DataRetrieval.SearchId))
+            {
+                Console.WriteLine("Please enter an integer");
+            }
+        }
+        testdata = await DataRetrieval.GetPreviousRunsDataAsync();
     }
 }

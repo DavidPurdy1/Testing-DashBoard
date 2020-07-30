@@ -31,23 +31,22 @@
    .searchmethod{
        margin-left: 700px;
    }
-   .dot{
+   .dot {
     height: 20px;
     width: 20px;
-    background-color: "@color";
-    border-radius: 50%;
+     background-color: #bbb;
+     border-radius: 50%;
     display: inline-block;
-   }
+}
 </style>
 </head>
 <h1>Test DashBoard Home </h1>
-
    <div class ="entry">
     <EditForm Model="@entry" OnValidSubmit = "ValidSubmit">
     <DataAnnotationsValidator />
     <ValidationSummary/>
     <InputText id="entry" @bind-Value="entry.Text"/>
-
+ 
     <button class="searchb" @onclick="OnInitializedAsync">Search</button>
     <input type="radio" name="method" value="" @onclick="ByTestRunId">Test Run Id 
     <input type="radio" name="method" value="" @onclick = "ByTestCaseId">Test Case Id 
@@ -75,15 +74,11 @@ else{
             </tr>
         </thead>
         <tbody>
-            @foreach (var data in testdata){
-                @if(data.TestStatus == 1){
-                    testResult = "passed";     
-                }else{
-                    testResult = "failed"; 
-                }
-
-                <tr>
-                    <td><span class="dot" id="dot"></span></td>
+            @foreach (var data in testdata){ //prints multiple rows of data onto the table
+                @if(data.TestStatus == 1){ //if passed is true make it green and passed
+                    testResult = "passed";
+                    <tr>
+                    <td><span class="dot" style="background-color: #9dffb0;"></span></td>
                     <td>@data.TestRunId</td> 
                     <td>@data.TestCaseId</td>
                     <td>@data.TestName</td>
@@ -91,90 +86,126 @@ else{
                     <td>@testResult</td>
                     <td>@data.ImagePath</td>
                     <td>@data.CreatedBy</td>
-                </tr>   
+                </tr>         
+                }else{ //else make it red and fail
+                    testResult = "failed";
+                    <tr>
+                    <td><span class="dot" style="background-color: #fb4d4f;"></span></td>
+                    <td>@data.TestRunId</td> 
+                    <td>@data.TestCaseId</td>
+                    <td>@data.TestName</td>
+                    <td>@data.CreatedDate</td>
+                    <td>@testResult</td>
+                    <td>@data.ImagePath</td>
+                    <td>@data.CreatedBy</td>
+                    </tr>
+                }
             }
         </tbody>
     </table>
+    @if(testdata.Length < 1){
+        <p style="margin-left: 400px; margin-bottom: 300px;"><strong>No results match your search criteria.. @DataRetrieval.RetrievalErrorMsg</strong></p><br>
+        DataRetrieval.RetrievalErrorMsg = "";
+    }
 }
 </body>
 </html>
 
-@code{ //*******************************
+@code{
+    //*******************************
 
-#region 
-private TestData[] testdata;
-private PieConfig _config;
-private ChartJsPieChart _pieChartJs;
-private PieDataset pieSet;
-private string testResult; 
-DataEntry entry = new DataEntry();
-string color;  
-#endregion
+    #region 
+    private TestData[] testdata;
+    private PieConfig _config;
+    private ChartJsPieChart _pieChartJs;
+    private PieDataset pieSet;
+    private string testResult;
+    DataEntry entry = new DataEntry();
+    #endregion
 
-public void ValidSubmit(){
-    Console.WriteLine(entry.Text + " is a valid submit");
-}
-protected override void OnInitialized(){ 
-    _config = new PieConfig{
-        Options = new PieOptions{
-            MaintainAspectRatio = false, 
-            Title = new OptionsTitle{
-                Display = true,
-                Text = "Test Case Results"
-            },
-            Responsive = true, 
-             Animation = new ArcAnimation{
-                AnimateRotate = true,
-                AnimateScale = true
-            } 
-        }
-    };
-    _config.Data.Labels.AddRange(new[] { "Passed", "Failed"  });
-
-    pieSet = new PieDataset{
-        BackgroundColor = new[] {"#9dffb0", "#fb4d4f"},
-        BorderWidth = 0,
-        HoverBorderColor = "#323232",
-        HoverBorderWidth = 1,
-        BorderColor = "#ffffff",
-    };
-}
-protected override async Task OnInitializedAsync(){
-        if(entry.Text != null){
-            try{
-                if(!int.TryParse(entry.Text, out DataRetrieval.HomePageSearchId)){
-                    DataRetrieval.HomePageSearchString = entry.Text; 
+    public void ValidSubmit()
+    {
+        Console.WriteLine(entry.Text + " is a valid submit");
+    }
+    protected override void OnInitialized()
+    {
+        _config = new PieConfig
+        {
+            Options = new PieOptions
+            {
+                MaintainAspectRatio = false,
+                Title = new OptionsTitle
+                {
+                    Display = true,
+                    Text = "Test Case Results"
+                },
+                Responsive = true,
+                Animation = new ArcAnimation
+                {
+                    AnimateRotate = true,
+                    AnimateScale = true
                 }
-            }catch(Exception){
-                Console.WriteLine("Inproper Entry");
+            }
+        };
+        _config.Data.Labels.AddRange(new[] { "Passed", "Failed" });
+
+        pieSet = new PieDataset
+        {
+            BackgroundColor = new[] { "#9dffb0", "#fb4d4f" },
+            BorderWidth = 0,
+            HoverBorderColor = "#323232",
+            HoverBorderWidth = 1,
+            BorderColor = "#ffffff",
+        };
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        if (entry.Text != null)
+        {
+            try
+            {
+                if (!int.TryParse(entry.Text, out DataRetrieval.HomePageSearchId))
+                {
+                    DataRetrieval.HomePageSearchString = entry.Text.Trim();
+                }
+            }
+            catch (Exception)
+            {
+                DataRetrieval.RetrievalErrorMsg = "Inproper Entry";
             }
         }
-        Console.Write(DataRetrieval.searchMethod + " "); 
-        testdata = await DataRetrieval.GetHomeRunDataAsync(); 
-        
-        double numberPassed = 0; 
-        foreach(var data in testdata){
-            if(data.TestStatus == 1){
+        testdata = await DataRetrieval.GetHomeRunDataAsync();
+
+        double numberPassed = 0;
+        foreach (var data in testdata)
+        {
+            if (data.TestStatus == 1)
+            {
                 numberPassed++;
             }
-    }
-    if(pieSet.Data.Count > 0){
-        pieSet.Data.Clear();
-    }
-    pieSet.Data.AddRange(new double[] { numberPassed, testdata.Length - numberPassed });
-    _config.Data.Datasets.Add(pieSet);
+        }
+        if (pieSet.Data.Count > 0)
+        {
+            pieSet.Data.Clear();
+        }
+        pieSet.Data.AddRange(new double[] { numberPassed, testdata.Length - numberPassed });
+        _config.Data.Datasets.Add(pieSet);
     }
 
-private void ByTestRunId(){
-    DataRetrieval.searchMethod = 1;
-}
-private void ByTestCaseId(){
-    DataRetrieval.searchMethod = 2;
-}
-private void ByTestDate(){
-    DataRetrieval.searchMethod = 3;
-}
-private void ByTestName(){
-    DataRetrieval.searchMethod = 4;
-}
+    private void ByTestRunId()
+    {
+        DataRetrieval.searchMethod = 1;
+    }
+    private void ByTestCaseId()
+    {
+        DataRetrieval.searchMethod = 2;
+    }
+    private void ByTestDate()
+    {
+        DataRetrieval.searchMethod = 3;
+    }
+    private void ByTestName()
+    {
+        DataRetrieval.searchMethod = 4;
+    }
 }

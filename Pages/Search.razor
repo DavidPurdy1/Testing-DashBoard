@@ -46,21 +46,26 @@
     </table>
 }
 @code {
-    
-    TestData[] testdata; 
+    TestData[] testdata;
     string testResult = "";
     private DataEntry entry = new DataEntry();
-    private void ValidSubmit(){
+    private void ValidSubmit()
+    {
         //Console.WriteLine("Valid Submit");
     }
-     protected override async Task OnInitializedAsync(){
-        if(entry.Text != null){
-            try{
-              DataRetrieval.SearchId = int.Parse(entry.Text);  
-            }catch(Exception){
+    protected override async Task OnInitializedAsync()
+    {
+        if (entry.Text != null)
+        {
+            try
+            {
+                DataRetrieval.SearchId = int.Parse(entry.Text);
+            }
+            catch (Exception)
+            {
                 Console.WriteLine("Inproper Entry");
             }
         }
-        testdata = await DataRetrieval.GetSearchDataAsync();
+        testdata = await DataRetrieval.GetPreviousRunsDataAsync();
     }
 }
