@@ -1,6 +1,6 @@
 using System;
 using System.Diagnostics;
-
+using System.Configuration;
 namespace BlazorApp.Data
 {
     public class TestLauncher
@@ -10,7 +10,7 @@ namespace BlazorApp.Data
         {
             InProgress = true;
             ProcessStartInfo cmdStartInfo = new ProcessStartInfo();
-            cmdStartInfo.FileName = @"C:\Windows\System32\cmd.exe";
+            cmdStartInfo.FileName = @"C:\Windows\System32\WindowsPowerShell\v1.0\Powershell.exe";
             cmdStartInfo.RedirectStandardOutput = true;
             cmdStartInfo.RedirectStandardError = true;
             cmdStartInfo.RedirectStandardInput = true;
@@ -28,10 +28,9 @@ namespace BlazorApp.Data
             cmdProcess.BeginErrorReadLine();
             //Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\vsdevcmd.bat
             //Sets it to a Dev Prompt to be able to run mstest or vstest
-            cmdProcess.StandardInput.WriteLine("cd " + @"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\");
-            cmdProcess.StandardInput.WriteLine("vsdevcmd.bat");
-            cmdProcess.StandardInput.WriteLine("cd " + @"C:\Users\i00018\source\repos\Console Tests\bin\Debug");
-            cmdProcess.StandardInput.WriteLine("vstest.console.exe " + '"' + "Console Tests.dll" + '"' + " /Tests:" + tests);
+            cmdProcess.StandardInput.WriteLine("cd " + '"' + ConfigurationManager.AppSettings.Get("Vstest.exe") + '"');
+            cmdProcess.StandardInput.Write(@".\" + "vstest.console.exe ");
+            cmdProcess.StandardInput.WriteLine('"' + ConfigurationManager.AppSettings.Get("TestLocation") + '"' + " /Tests:" + tests);
             cmdProcess.StandardInput.WriteLine("exit");
             //cmdProcess.WaitForExit();
             InProgress = false;
