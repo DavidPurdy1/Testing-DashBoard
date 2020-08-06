@@ -53,7 +53,11 @@
     {
         if (entry.Text != null)
         {
-            if (!int.TryParse(entry.Text, out DataRetrieval.SearchId))
+            if (entry.Text == "all" || entry.Text == "All")
+            {
+                DataRetrieval.allSelected = true;
+            }
+            else if (!int.TryParse(entry.Text, out DataRetrieval.SearchId))
             {
                 Console.WriteLine("Please enter an integer");
             }

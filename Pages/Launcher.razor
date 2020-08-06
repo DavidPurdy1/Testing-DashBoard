@@ -1,0 +1,109 @@
+@page "/launcher"
+@using System.Configuration
+@using BlazorApp.Data;
+@inject TestLauncher Runner;
+
+<head>
+ <style type ="text/css" >
+   .footer{ 
+       position: static;     
+       left: 250px;    
+       bottom: 150px; 
+       width: 100%;
+   }  
+   .search{
+       padding: 15px;
+   }
+   .table{
+       text-align: center;
+       padding: 10px;
+   }
+</style>
+</head>
+<body>
+<h1>Launch Tests Here</h1>
+
+<p>@testingprogress</p>
+
+<table class="table">
+    <tr>
+    <th><button class="search" disabled=@IsTaskRunning @onclick="ButtonAction1">@ButtonName1</button></th>
+    <th><button class="search" disabled=@IsTaskRunning @onclick="ButtonAction2">@ButtonName2</button></th>
+    <th><button class="search" disabled=@IsTaskRunning @onclick="ButtonAction3">@ButtonName3</button></th>
+    <th><button class="search" disabled=@IsTaskRunning @onclick="ButtonAction4">@ButtonName4</button></th>
+    <th><button class="search" disabled=@IsTaskRunning @onclick="ButtonAction5">@ButtonName5</button> </th>
+    </tr>
+</table>
+
+
+<div class="footer">
+    <p>Run Tests By Test Case Name</p>
+    <EditForm Model="@entry" OnValidSubmit = "ValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary/>
+    <InputText id="entry" @bind-Value="entry.Text"/>
+    <button class="searchb" @onclick="SearchButtonAction">Run</button>
+    </EditForm>
+ </div> 
+</body>
+
+@code{
+    #region fields
+    private DataEntry entry = new DataEntry();
+    public bool IsTaskRunning = false;
+    public string testingprogress = "";
+    public string ButtonName1 = "Basic Test Scenerio";
+    public string ButtonName2 = "Advanced Test Scenerio";
+    public string ButtonName3 = "Full Test Scenerio";
+    public string ButtonName4 = "Four Part Test Scenerio";
+    public string ButtonName5 = "Regression Test Scenerio";
+    #endregion
+
+    #region button actions
+    public void ButtonAction1()
+    {
+        string tests = ConfigurationManager.AppSettings.Get("Basic Test");
+        WaitForResults(tests, 60000);
+    }
+    public void ButtonAction2()
+    {
+        string tests = ConfigurationManager.AppSettings.Get("Advanced Test");
+        WaitForResults(tests);
+    }
+    public void ButtonAction3()
+    {
+        string tests = ConfigurationManager.AppSettings.Get("Full Test");
+        WaitForResults(tests, 120000);
+    }
+    public void ButtonAction4()
+    {
+        string tests = ConfigurationManager.AppSettings.Get("Four Part Test");
+        WaitForResults(tests, 120000);
+    }
+    public void ButtonAction5()
+    {
+        string tests = ConfigurationManager.AppSettings.Get("Regression Test");
+        WaitForResults(tests, 60000);
+    }
+    public void SearchButtonAction()
+    {
+        WaitForResults(entry.Text);
+    }
+    #endregion
+
+    public async void WaitForResults(string tests, int estimatedTime = 25000)
+    {
+        IsTaskRunning = true;
+        testingprogress = "Running Tests ...";
+        StateHasChanged();
+        Runner.Runner(tests);
+        await Task.Delay(estimatedTime);
+        IsTaskRunning = false;
+        testingprogress = "";
+        StateHasChanged();
+    }
+    public void ValidSubmit()
+    {
+        Console.WriteLine("Valid Submit " + entry.Text);
+    }
+}

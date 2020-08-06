@@ -61,3 +61,5 @@ C:\Users\i00018\source\repos\BlazorApp\bin\Debug\netcoreapp3.1\app.config
 C:\Users\i00018\source\repos\BlazorApp\bin\Debug\netcoreapp3.1\BlazorApp.dll.config
 C:\Users\i00018\source\repos\BlazorApp\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\Search.razor.g.cs
 C:\Users\i00018\source\repos\BlazorApp\obj\Debug\netcoreapp3.1\Razor\Pages\Search.razor.g.cs
+C:\Users\i00018\source\repos\BlazorApp\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\Launcher.razor.g.cs
+C:\Users\i00018\source\repos\BlazorApp\obj\Debug\netcoreapp3.1\Razor\Pages\Launcher.razor.g.cs

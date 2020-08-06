@@ -12,6 +12,7 @@ namespace BlazorApp.Data
         #region 
         private string connectionString = ConfigurationManager.AppSettings.Get("DBConnection");
         public int SearchId = 15; //search default case for the search page
+        public bool allSelected = false;
         public int HomePageSearchId = 0; //value entered into the search bar on home page
         public string HomePageSearchString = ""; //The value if it is a date or testname
         public int searchMethod = 1;   //button selected on home page: 1 = test run id, 2 = test case id, 3 = date, 4 = test name
@@ -19,10 +20,11 @@ namespace BlazorApp.Data
         #endregion
         public Task<TestData[]> GetPreviousRunsDataAsync()
         { //previous page
-            if (SearchId < 0 || SearchId > GetTestRunCount())
+            if (SearchId < 0 || SearchId > GetTestRunCount() || allSelected)
             {
                 SearchId = GetTestRunCount();
             }
+            allSelected = false;
             return Task.FromResult(Enumerable.Range(1, SearchId).Select(index => GetRecentRunsByTestRunId(index)).ToArray());
         }
         public Task<TestData[]> GetHomeRunDataAsync()
@@ -75,16 +77,25 @@ namespace BlazorApp.Data
             command.Parameters.Add("testRunId", SqlDbType.BigInt).Value = recent;
             using (SqlDataReader reader = command.ExecuteReader())
             {
-                while (reader.Read())
-                {
-                    data.TestRunId = recent;
-                    data.CreatedBy = reader["createdBy"].ToString();
-                    data.ImagePath = reader["imagePath"].ToString();
-                    data.CreatedDate = DateTime.Parse(reader["createdDate"].ToString());
-                    data.TestCaseId = increment;
-                    data.TestName = reader["testName"].ToString();
-                    data.TestStatus = int.Parse(reader["testStatusId"].ToString());
-                }
+                DataTable table = new DataTable();
+                table.Load(reader);
+                data.TestCaseId = int.Parse(table.Rows[index - 1]["testCaseId"].ToString());
+                data.CreatedBy = table.Rows[index - 1]["createdBy"].ToString();
+                data.ImagePath = table.Rows[index - 1]["imagePath"].ToString();
+                data.TestRunId = int.Parse(table.Rows[index - 1]["testRunId"].ToString());
+                data.TestName = table.Rows[index - 1]["testName"].ToString();
+                data.TestStatus = int.Parse(table.Rows[index - 1]["testStatusId"].ToString());
+                data.CreatedDate = DateTime.Parse(table.Rows[index - 1]["createdDate"].ToString());
+
+
+                // data.TestRunId = recent;
+                // data.CreatedBy = reader["createdBy"].ToString();
+                // data.ImagePath = reader["imagePath"].ToString();
+                // data.CreatedDate = DateTime.Parse(reader["createdDate"].ToString());
+                // data.TestCaseId = increment;
+                // data.TestName = reader["testName"].ToString();
+                // data.TestStatus = int.Parse(reader["testStatusId"].ToString());
+
                 reader.Close();
                 connection.Close();
             }
@@ -108,16 +119,15 @@ namespace BlazorApp.Data
             command.Parameters.Add("testRunId", SqlDbType.BigInt).Value = recent;
             using (SqlDataReader reader = command.ExecuteReader())
             {
-                while (reader.Read())
-                {
-                    data.TestRunId = recent;
-                    data.CreatedBy = reader["createdBy"].ToString();
-                    data.ImagePath = reader["imagePath"].ToString();
-                    data.CreatedDate = DateTime.Parse(reader["createdDate"].ToString());
-                    data.TestCaseId = increment;
-                    data.TestName = reader["testName"].ToString();
-                    data.TestStatus = int.Parse(reader["testStatusId"].ToString());
-                }
+                DataTable table = new DataTable();
+                table.Load(reader);
+                data.TestCaseId = int.Parse(table.Rows[index - 1]["testCaseId"].ToString());
+                data.CreatedBy = table.Rows[index - 1]["createdBy"].ToString();
+                data.ImagePath = table.Rows[index - 1]["imagePath"].ToString();
+                data.TestRunId = int.Parse(table.Rows[index - 1]["testRunId"].ToString());
+                data.TestName = table.Rows[index - 1]["testName"].ToString();
+                data.TestStatus = int.Parse(table.Rows[index - 1]["testStatusId"].ToString());
+                data.CreatedDate = DateTime.Parse(table.Rows[index - 1]["createdDate"].ToString());
                 reader.Close();
                 connection.Close();
             }
@@ -136,8 +146,15 @@ namespace BlazorApp.Data
             command.CommandText = "spGetAllTestRunsByTestRunId";
 
             //increments down by 2 each time from the most recent test run 
-            int recent = GetMaxTestRunId() - index * 2;
-
+            int recent;
+            if (index > 1)
+            {
+                recent = GetMaxTestRunId() - index * 2;
+            }
+            else
+            {
+                recent = GetMaxTestRunId();
+            }
             command.Parameters.Add("testRunId", SqlDbType.BigInt).Value = recent;
             using (SqlDataReader reader = command.ExecuteReader())
             {
