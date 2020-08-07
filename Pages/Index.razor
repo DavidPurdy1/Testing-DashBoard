@@ -76,7 +76,7 @@ else{
         <tbody>
             @foreach (var data in testdata){ //prints multiple rows of data onto the table
                 @if(data.TestStatus == 1){ //if passed is true make it green and passed
-                    testResult = "passed";
+                    testResult = "Passed";
                     <tr>
                     <td><span class="dot" style="background-color: #9dffb0;"></span></td>
                     <td>@data.TestRunId</td> 
@@ -86,9 +86,23 @@ else{
                     <td>@testResult</td>
                     <td>@data.ImagePath</td>
                     <td>@data.CreatedBy</td>
-                </tr>         
-                }else{ //else make it red and fail
-                    testResult = "failed";
+                </tr>
+                }
+                else if (data.TestStatus == 3 ){
+                    testResult = "Interrupted";
+                    <tr>
+                    <td><span class="dot" style="background-color: #FFFF60;"></span></td>
+                    <td>@data.TestRunId</td> 
+                    <td>@data.TestCaseId</td>
+                    <td>@data.TestName</td>
+                    <td>@data.CreatedDate</td>
+                    <td>@testResult</td>
+                    <td>@data.ImagePath</td>
+                    <td>@data.CreatedBy</td>
+                    </tr>
+                }        
+                else{ //else make it red and fail
+                    testResult = "Failed";
                     <tr>
                     <td><span class="dot" style="background-color: #fb4d4f;"></span></td>
                     <td>@data.TestRunId</td> 
@@ -147,11 +161,11 @@ else{
                 }
             }
         };
-        _config.Data.Labels.AddRange(new[] { "Passed", "Failed" });
+        _config.Data.Labels.AddRange(new[] { "Passed", "Failed", "Interrupted" });
 
         pieSet = new PieDataset
         {
-            BackgroundColor = new[] { "#9dffb0", "#fb4d4f" },
+            BackgroundColor = new[] { "#9dffb0", "#fb4d4f", "#FFFF60" },
             BorderWidth = 0,
             HoverBorderColor = "#323232",
             HoverBorderWidth = 1,
@@ -177,18 +191,23 @@ else{
         testdata = await DataRetrieval.GetHomeRunDataAsync();
 
         double numberPassed = 0;
+        double numberInterrupted = 0;
         foreach (var data in testdata)
         {
             if (data.TestStatus == 1)
             {
                 numberPassed++;
             }
+            if (data.TestStatus == 3)
+            {
+                numberInterrupted++;
+            }
         }
         if (pieSet.Data.Count > 0)
         {
             pieSet.Data.Clear();
         }
-        pieSet.Data.AddRange(new double[] { numberPassed, testdata.Length - numberPassed });
+        pieSet.Data.AddRange(new double[] { numberPassed, testdata.Length - numberPassed - numberInterrupted, numberInterrupted });
         _config.Data.Datasets.Add(pieSet);
     }
 
