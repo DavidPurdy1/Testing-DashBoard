@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Configuration;
 
-namespace BlazorApp.Data
+namespace BlazorApp.Services
 {
     public class TestDataRetrieval
     {

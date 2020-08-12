@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace BlazorApp.Data
+namespace BlazorApp.Services
 {
     public class DataEntry
     {

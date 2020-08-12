@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Configuration;
-namespace BlazorApp.Data
+namespace BlazorApp.Services
 {
     public class TestLauncher
     {
