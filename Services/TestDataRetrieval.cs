@@ -87,15 +87,6 @@ namespace BlazorApp.Services
                 data.TestStatus = int.Parse(table.Rows[index - 1]["testStatusId"].ToString());
                 data.CreatedDate = DateTime.Parse(table.Rows[index - 1]["createdDate"].ToString());
 
-
-                // data.TestRunId = recent;
-                // data.CreatedBy = reader["createdBy"].ToString();
-                // data.ImagePath = reader["imagePath"].ToString();
-                // data.CreatedDate = DateTime.Parse(reader["createdDate"].ToString());
-                // data.TestCaseId = increment;
-                // data.TestName = reader["testName"].ToString();
-                // data.TestStatus = int.Parse(reader["testStatusId"].ToString());
-
                 reader.Close();
                 connection.Close();
             }
@@ -145,11 +136,10 @@ namespace BlazorApp.Services
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "spGetAllTestRunsByTestRunId";
 
-            //increments down by 2 each time from the most recent test run 
             int recent;
             if (index > 1)
             {
-                recent = GetMaxTestRunId() - index * 2;
+                recent = GetMaxTestRunId() - index;
             }
             else
             {

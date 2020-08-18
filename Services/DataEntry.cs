@@ -7,5 +7,6 @@ namespace BlazorApp.Services
         [Required]
         [StringLength(256, ErrorMessage = "Entry is too long.")]
         public string Text { get; set; }
+        public string Time { get; set; }
     }
 }

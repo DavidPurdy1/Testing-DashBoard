@@ -2,6 +2,7 @@
 @using System.Configuration
 @using BlazorApp.Services;
 @inject TestLauncher Runner;
+@using System.Threading;
 
 <head>
  <style type ="text/css" >
@@ -43,6 +44,14 @@
     <ValidationSummary/>
     <InputText id="entry" @bind-Value="entry.Text"/>
     <button class="searchb" @onclick="SearchButtonAction">Run</button>
+    </EditForm>
+
+    <p>Run at a certain time</p>
+    <EditForm Model="@entry" OnValidSubmit = "ValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary/>
+    <InputText id="entry" @bind-Value="entry.Time"/>
+    <button class="searchb" @onclick="SetTimer">Run</button>
     </EditForm>
  </div> 
 </body>
@@ -90,17 +99,44 @@
         WaitForResults(entry.Text);
     }
     #endregion
-
+    public void SetTimer()
+    {
+        Timer t = new Timer(new TimerCallback(TimerAction));
+        t.Change(int.Parse(entry.Time), 0);
+    }
+    private void TimerAction(object state)
+    {
+        // The state object is the Timer object.
+        Timer t = (Timer)state;
+        t.Dispose();
+        WaitForResults(entry.Text, 25000);
+    }
     public async void WaitForResults(string tests, int estimatedTime = 25000)
     {
         IsTaskRunning = true;
         testingprogress = "Running Tests ...";
-        StateHasChanged();
+        try
+        {
+            StateHasChanged();
+        }
+        catch (InvalidOperationException e)
+        {
+            Console.WriteLine(e.StackTrace);
+        }
         Runner.Runner(tests);
         await Task.Delay(estimatedTime);
         IsTaskRunning = false;
         testingprogress = "";
-        StateHasChanged();
+        try
+        {
+            StateHasChanged();
+        }
+        catch (InvalidOperationException e)
+        {
+            Console.WriteLine(e.StackTrace);
+        }
+
+
     }
     public void ValidSubmit()
     {
