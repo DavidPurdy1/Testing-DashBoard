@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-
+///<summary> Just Takes Data</summary> 
 namespace BlazorApp.Services
 {
     public class DataEntry

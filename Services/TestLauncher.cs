@@ -1,43 +1,51 @@
 using System;
 using System.Diagnostics;
 using System.Configuration;
+using System.Threading.Tasks;
 namespace BlazorApp.Services
 {
     public class TestLauncher
     {
-        public void Runner(string tests)
+        public static async Task<int> RunProcessAsync(string tests)
         {
-            ProcessStartInfo startInfo = new ProcessStartInfo();
-            startInfo.FileName = @"C:\Windows\System32\WindowsPowerShell\v1.0\Powershell.exe";
-            startInfo.RedirectStandardOutput = true;
-            startInfo.RedirectStandardError = true;
-            startInfo.RedirectStandardInput = true;
-            startInfo.UseShellExecute = false;
-            startInfo.CreateNoWindow = true;
-
-            Process shellProcess = new Process();
-            shellProcess.StartInfo = startInfo;
-            shellProcess.ErrorDataReceived += cmd_Error;
-            shellProcess.OutputDataReceived += cmd_Output;
-            shellProcess.EnableRaisingEvents = true;
-            shellProcess.Start();
-            shellProcess.BeginOutputReadLine();
-            shellProcess.BeginErrorReadLine();
-            shellProcess.StandardInput.WriteLine("cd " + '"' + ConfigurationManager.AppSettings.Get("Vstest.exe") + '"');
-            shellProcess.StandardInput.Write(@".\" + "vstest.console.exe ");
-            shellProcess.StandardInput.WriteLine('"' + ConfigurationManager.AppSettings.Get("TestLocation") + '"' + " /Tests:" + tests);
-            shellProcess.StandardInput.WriteLine("exit");
+            using (var process = new Process
+            {
+                StartInfo ={
+                    FileName = @"C:\Windows\System32\WindowsPowerShell\v1.0\Powershell.exe",
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    RedirectStandardInput = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true
+                },
+                EnableRaisingEvents = true
+            })
+            {
+                return await RunProcessAsync(process, tests).ConfigureAwait(false);
+            }
         }
-
-        public void cmd_Output(object sender, DataReceivedEventArgs e)
+        private static Task<int> RunProcessAsync(Process process, string tests)
         {
-            Console.WriteLine(e.Data);
-        }
+            var tcs = new TaskCompletionSource<int>();
 
-        public void cmd_Error(object sender, DataReceivedEventArgs e)
-        {
-            Console.Write("Error >> ");
-            Console.WriteLine(e.Data);
+            process.Exited += (s, ea) => tcs.SetResult(process.ExitCode);
+            process.OutputDataReceived += (s, ea) => Console.WriteLine(ea.Data);
+            process.ErrorDataReceived += (s, ea) => Console.WriteLine("ERR: " + ea.Data);
+
+            if (!process.Start())
+            {
+                throw new InvalidOperationException("Could not start process: " + process);
+            }
+
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+            process.StandardInput.WriteLine("cd " + '"' + ConfigurationManager.AppSettings.Get("Vstest.exe") + '"');
+            process.StandardInput.Write(@".\" + "vstest.console.exe ");
+            process.StandardInput.WriteLine('"' + ConfigurationManager.AppSettings.Get("TestLocation") + '"' + " /Tests:" + tests);
+            process.StandardInput.WriteLine("exit");
+
+            Console.WriteLine("It has finished running the process");
+            return tcs.Task;
         }
     }
 }

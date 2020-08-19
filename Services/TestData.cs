@@ -1,5 +1,5 @@
 using System;
-
+///<summary> Holds data about the test case or test run </summary> 
 namespace BlazorApp.Services
 {
     public class TestData

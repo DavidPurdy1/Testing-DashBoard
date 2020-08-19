@@ -18,8 +18,10 @@ namespace BlazorApp.Services
         public int searchMethod = 1;   //button selected on home page: 1 = test run id, 2 = test case id, 3 = date, 4 = test name
         public string RetrievalErrorMsg = "";
         #endregion
+        ///<summary>Gets Data by TestRunId for Previous Test Results Page Async</summary> 
+        ///<returns> Task holding an array of TestData </returns>
         public Task<TestData[]> GetPreviousRunsDataAsync()
-        { //previous page
+        {   //searchId allows you to specify the amount of results that show up. 
             if (SearchId < 0 || SearchId > GetTestRunCount() || allSelected)
             {
                 SearchId = GetTestRunCount();
@@ -27,6 +29,8 @@ namespace BlazorApp.Services
             allSelected = false;
             return Task.FromResult(Enumerable.Range(1, SearchId).Select(index => GetRecentRunsByTestRunId(index)).ToArray());
         }
+        ///<summary>Gets Data by one of 4 methods testRunId, testCaseId, testDate, or testName for the home Page Async</summary> 
+        ///<returns> Task holding an array of TestData for the home page</returns>
         public Task<TestData[]> GetHomeRunDataAsync()
         { //home page
             if (HomePageSearchId == 0 && HomePageSearchString == "")
@@ -60,106 +64,145 @@ namespace BlazorApp.Services
                 return Task.FromResult(Enumerable.Range(1, GetTestCaseCountByTestRunId(GetMaxTestRunId())).Select(index => GetMostRecentCasesByTestRunId(index)).ToArray());
             }
         }
+        ///<summary>Gets the most recent test cases given a test run id </summary> 
+        ///<returns>TestData of the test cases</returns>
         public TestData GetMostRecentCasesByTestRunId(int index)
         { //on the home page most recent test cases from test ran and default
             TestData data = new TestData();
             SqlConnection connection = new SqlConnection(connectionString);
-            connection.Open();
-
-            SqlCommand command = new SqlCommand();
-            command.CommandTimeout = 60;
-            command.Connection = connection;
-            command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "spGetAllTestCasesByTestRunId";
-            //max test run
-            int recent = GetMaxTestRunId();
-            int increment = GetTestCaseId(recent) - index;
-            command.Parameters.Add("testRunId", SqlDbType.BigInt).Value = recent;
-            using (SqlDataReader reader = command.ExecuteReader())
+            try
             {
-                DataTable table = new DataTable();
-                table.Load(reader);
-                data.TestCaseId = int.Parse(table.Rows[index - 1]["testCaseId"].ToString());
-                data.CreatedBy = table.Rows[index - 1]["createdBy"].ToString();
-                data.ImagePath = table.Rows[index - 1]["imagePath"].ToString();
-                data.TestRunId = int.Parse(table.Rows[index - 1]["testRunId"].ToString());
-                data.TestName = table.Rows[index - 1]["testName"].ToString();
-                data.TestStatus = int.Parse(table.Rows[index - 1]["testStatusId"].ToString());
-                data.CreatedDate = DateTime.Parse(table.Rows[index - 1]["createdDate"].ToString());
+                connection.Open();
 
-                reader.Close();
-                connection.Close();
+                SqlCommand command = new SqlCommand();
+                command.CommandTimeout = 60;
+                command.Connection = connection;
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandText = "spGetAllTestCasesByTestRunId";
+                //max test run
+                int recent = GetMaxTestRunId();
+                int increment = GetTestCaseId(recent) - index;
+                command.Parameters.Add("testRunId", SqlDbType.BigInt).Value = recent;
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    DataTable table = new DataTable();
+                    table.Load(reader);
+                    data.TestCaseId = int.Parse(table.Rows[index - 1]["testCaseId"].ToString());
+                    data.CreatedBy = table.Rows[index - 1]["createdBy"].ToString();
+                    data.ImagePath = table.Rows[index - 1]["imagePath"].ToString();
+                    data.TestRunId = int.Parse(table.Rows[index - 1]["testRunId"].ToString());
+                    data.TestName = table.Rows[index - 1]["testName"].ToString();
+                    data.TestStatus = int.Parse(table.Rows[index - 1]["testStatusId"].ToString());
+                    data.CreatedDate = DateTime.Parse(table.Rows[index - 1]["createdDate"].ToString());
+
+                    reader.Close();
+                    connection.Close();
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e.StackTrace, "GetRecentCaseByRunID");
+            }
+            catch (InvalidOperationException e)
+            {
+                Console.WriteLine(e.StackTrace, "GetRecentCaseByRunID");
             }
             return data;
         }
+        ///<summary>Gets the test cases for a specific test run id given test run id</summary> 
+        ///<returns>TestData for test cases</returns>
         public TestData GetCasesByTestRunId(int index, int HomePageSearchId)
         { //entry to search for test cases by run id 
             TestData data = new TestData();
             SqlConnection connection = new SqlConnection(connectionString);
-            connection.Open();
-
-            SqlCommand command = new SqlCommand();
-            command.CommandTimeout = 60;
-            command.Connection = connection;
-            command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "spGetAllTestCasesByTestRunId";
-
-            //inputted Run Id value to search for
-            int recent = HomePageSearchId;
-            int increment = GetTestCaseId(recent) - index;
-            command.Parameters.Add("testRunId", SqlDbType.BigInt).Value = recent;
-            using (SqlDataReader reader = command.ExecuteReader())
+            try
             {
-                DataTable table = new DataTable();
-                table.Load(reader);
-                data.TestCaseId = int.Parse(table.Rows[index - 1]["testCaseId"].ToString());
-                data.CreatedBy = table.Rows[index - 1]["createdBy"].ToString();
-                data.ImagePath = table.Rows[index - 1]["imagePath"].ToString();
-                data.TestRunId = int.Parse(table.Rows[index - 1]["testRunId"].ToString());
-                data.TestName = table.Rows[index - 1]["testName"].ToString();
-                data.TestStatus = int.Parse(table.Rows[index - 1]["testStatusId"].ToString());
-                data.CreatedDate = DateTime.Parse(table.Rows[index - 1]["createdDate"].ToString());
-                reader.Close();
-                connection.Close();
+                connection.Open();
+
+                SqlCommand command = new SqlCommand();
+                command.CommandTimeout = 60;
+                command.Connection = connection;
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandText = "spGetAllTestCasesByTestRunId";
+
+                //inputted Run Id value to search for
+                int recent = HomePageSearchId;
+                int increment = GetTestCaseId(recent) - index;
+                command.Parameters.Add("testRunId", SqlDbType.BigInt).Value = recent;
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    DataTable table = new DataTable();
+                    table.Load(reader);
+                    data.TestCaseId = int.Parse(table.Rows[index - 1]["testCaseId"].ToString());
+                    data.CreatedBy = table.Rows[index - 1]["createdBy"].ToString();
+                    data.ImagePath = table.Rows[index - 1]["imagePath"].ToString();
+                    data.TestRunId = int.Parse(table.Rows[index - 1]["testRunId"].ToString());
+                    data.TestName = table.Rows[index - 1]["testName"].ToString();
+                    data.TestStatus = int.Parse(table.Rows[index - 1]["testStatusId"].ToString());
+                    data.CreatedDate = DateTime.Parse(table.Rows[index - 1]["createdDate"].ToString());
+                    reader.Close();
+                    connection.Close();
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e.StackTrace, "GetCaseByRunID");
+            }
+            catch (InvalidOperationException e)
+            {
+                Console.WriteLine(e.StackTrace, "GetCaseByRunID");
             }
             return data;
         }
+        ///<summary>Get the recent test runs given TestRunId</summary> 
+        ///<returns> </returns>
         public TestData GetRecentRunsByTestRunId(int index)
         { //previous page most recent tests ran, no case data 
             TestData data = new TestData();
             SqlConnection connection = new SqlConnection(connectionString);
-            connection.Open();
+            try
+            {
+                connection.Open();
 
-            SqlCommand command = new SqlCommand();
-            command.CommandTimeout = 60;
-            command.Connection = connection;
-            command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "spGetAllTestRunsByTestRunId";
+                SqlCommand command = new SqlCommand();
+                command.CommandTimeout = 60;
+                command.Connection = connection;
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandText = "spGetAllTestRunsByTestRunId";
 
-            int recent;
-            if (index > 1)
-            {
-                recent = GetMaxTestRunId() - index;
-            }
-            else
-            {
-                recent = GetMaxTestRunId();
-            }
-            command.Parameters.Add("testRunId", SqlDbType.BigInt).Value = recent;
-            using (SqlDataReader reader = command.ExecuteReader())
-            {
-                while (reader.Read())
+                int recent;
+                if (index > 1)
                 {
-                    data.TestRunId = recent;
-                    data.CreatedBy = reader["createdBy"].ToString();
-                    data.ApplicationName = reader["applicationName"].ToString();
-                    data.ApplicationVersion = reader["applicationVersion"].ToString();
-                    data.TestsFailed = int.Parse(reader["testsFailed"].ToString());
-                    data.TestsPassed = int.Parse(reader["testPassed"].ToString());
-                    data.CreatedDate = DateTime.Parse(reader["createdDate"].ToString());
+                    recent = GetMaxTestRunId() - index;
                 }
-                reader.Close();
-                connection.Close();
+                else
+                {
+                    recent = GetMaxTestRunId();
+                }
+                command.Parameters.Add("testRunId", SqlDbType.BigInt).Value = recent;
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        data.TestRunId = recent;
+                        data.CreatedBy = reader["createdBy"].ToString();
+                        data.ApplicationName = reader["applicationName"].ToString();
+                        data.ApplicationVersion = reader["applicationVersion"].ToString();
+                        data.TestsFailed = int.Parse(reader["testsFailed"].ToString());
+                        data.TestsPassed = int.Parse(reader["testPassed"].ToString());
+                        data.CreatedDate = DateTime.Parse(reader["createdDate"].ToString());
+                    }
+                    reader.Close();
+                    connection.Close();
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e.StackTrace, "GetRecentCaseByRunID");
+            }
+            catch (InvalidOperationException e)
+            {
+                Console.WriteLine(e.StackTrace, "GetRecentCaseByRunID");
             }
             return data;
         }
@@ -167,32 +210,43 @@ namespace BlazorApp.Services
         { //test case id is unique, only will return one
             TestData data = new TestData();
             SqlConnection connection = new SqlConnection(connectionString);
-            connection.Open();
-
-            SqlCommand command = new SqlCommand();
-            command.CommandTimeout = 60;
-            command.Connection = connection;
-            command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "spGetTestCaseByTestCaseId";
-            //inputted value for test case Id 
-            int recent = HomePageSearchId;
-
-            command.Parameters.Add("testCaseId", SqlDbType.BigInt).Value = recent;
-
-            using (SqlDataReader reader = command.ExecuteReader())
+            try
             {
-                while (reader.Read())
+                connection.Open();
+
+                SqlCommand command = new SqlCommand();
+                command.CommandTimeout = 60;
+                command.Connection = connection;
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandText = "spGetTestCaseByTestCaseId";
+                //inputted value for test case Id 
+                int recent = HomePageSearchId;
+
+                command.Parameters.Add("testCaseId", SqlDbType.BigInt).Value = recent;
+
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    data.TestCaseId = recent;
-                    data.TestRunId = int.Parse(reader["testRunId"].ToString());
-                    data.CreatedBy = reader["createdBy"].ToString();
-                    data.ImagePath = reader["imagePath"].ToString();
-                    data.CreatedDate = DateTime.Parse(reader["createdDate"].ToString());
-                    data.TestName = reader["testName"].ToString();
-                    data.TestStatus = int.Parse(reader["testStatusId"].ToString());
+                    while (reader.Read())
+                    {
+                        data.TestCaseId = recent;
+                        data.TestRunId = int.Parse(reader["testRunId"].ToString());
+                        data.CreatedBy = reader["createdBy"].ToString();
+                        data.ImagePath = reader["imagePath"].ToString();
+                        data.CreatedDate = DateTime.Parse(reader["createdDate"].ToString());
+                        data.TestName = reader["testName"].ToString();
+                        data.TestStatus = int.Parse(reader["testStatusId"].ToString());
+                    }
+                    reader.Close();
+                    connection.Close();
                 }
-                reader.Close();
-                connection.Close();
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e.StackTrace, "GetTestCaseByTestCaseID");
+            }
+            catch (InvalidOperationException e)
+            {
+                Console.WriteLine(e.StackTrace, "GetTestCaseByTestCaseID");
             }
             return data;
         }
@@ -200,33 +254,44 @@ namespace BlazorApp.Services
         {
             TestData data = new TestData();
             SqlConnection connection = new SqlConnection(connectionString);
-            connection.Open();
-            SqlCommand command = new SqlCommand();
-            command.CommandTimeout = 60;
-            command.Connection = connection;
-            command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "spGetAllCasesByTestDate";
+            try
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand();
+                command.CommandTimeout = 60;
+                command.Connection = connection;
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandText = "spGetAllCasesByTestDate";
 
-            //gets rid of the am or pm and then converts the string to datetime
-            DateTime recent;
-            if (!DateTime.TryParse(HomePageSearchString, out recent))
-            {
-                RetrievalErrorMsg = "Improper Date Entry";
+                //gets rid of the am or pm and then converts the string to datetime
+                DateTime recent;
+                if (!DateTime.TryParse(HomePageSearchString, out recent))
+                {
+                    RetrievalErrorMsg = "Improper Date Entry";
+                }
+                command.Parameters.Add("createdDate", SqlDbType.Date).Value = recent.Date;
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    DataTable table = new DataTable();
+                    table.Load(reader);
+                    data.TestCaseId = int.Parse(table.Rows[index]["testCaseId"].ToString());
+                    data.CreatedBy = table.Rows[index]["createdBy"].ToString();
+                    data.ImagePath = table.Rows[index]["imagePath"].ToString();
+                    data.TestRunId = int.Parse(table.Rows[index]["testRunId"].ToString());
+                    data.TestName = table.Rows[index]["testName"].ToString();
+                    data.TestStatus = int.Parse(table.Rows[index]["testStatusId"].ToString());
+                    data.CreatedDate = DateTime.Parse(table.Rows[index]["createdDate"].ToString());
+                    reader.Close();
+                    connection.Close();
+                }
             }
-            command.Parameters.Add("createdDate", SqlDbType.Date).Value = recent.Date;
-            using (SqlDataReader reader = command.ExecuteReader())
+            catch (SqlException e)
             {
-                DataTable table = new DataTable();
-                table.Load(reader);
-                data.TestCaseId = int.Parse(table.Rows[index]["testCaseId"].ToString());
-                data.CreatedBy = table.Rows[index]["createdBy"].ToString();
-                data.ImagePath = table.Rows[index]["imagePath"].ToString();
-                data.TestRunId = int.Parse(table.Rows[index]["testRunId"].ToString());
-                data.TestName = table.Rows[index]["testName"].ToString();
-                data.TestStatus = int.Parse(table.Rows[index]["testStatusId"].ToString());
-                data.CreatedDate = DateTime.Parse(table.Rows[index]["createdDate"].ToString());
-                reader.Close();
-                connection.Close();
+                Console.WriteLine(e.StackTrace, "GetTestCaseByTestDate");
+            }
+            catch (InvalidOperationException e)
+            {
+                Console.WriteLine(e.StackTrace, "GetTestCaseByTestDate");
             }
             return data;
         }
@@ -234,31 +299,42 @@ namespace BlazorApp.Services
         {
             TestData data = new TestData();
             SqlConnection connection = new SqlConnection(connectionString);
-            connection.Open();
-
-            SqlCommand command = new SqlCommand();
-            command.CommandTimeout = 60;
-            command.Connection = connection;
-            command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "spGetAllCasesByTestName";
-
-            //inputted test name 
-            string recent = HomePageSearchString;
-
-            command.Parameters.Add("testName", SqlDbType.NVarChar).Value = recent;
-            using (SqlDataReader reader = command.ExecuteReader())
+            try
             {
-                DataTable table = new DataTable();
-                table.Load(reader);
-                data.TestCaseId = int.Parse(table.Rows[index]["testCaseId"].ToString());
-                data.CreatedBy = table.Rows[index]["createdBy"].ToString();
-                data.ImagePath = table.Rows[index]["imagePath"].ToString();
-                data.TestRunId = int.Parse(table.Rows[index]["testRunId"].ToString());
-                data.TestName = recent;
-                data.CreatedDate = DateTime.Parse(table.Rows[index]["createdDate"].ToString());
-                data.TestStatus = int.Parse(table.Rows[index]["testStatusId"].ToString());
-                reader.Close();
-                connection.Close();
+                connection.Open();
+
+                SqlCommand command = new SqlCommand();
+                command.CommandTimeout = 60;
+                command.Connection = connection;
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandText = "spGetAllCasesByTestName";
+
+                //inputted test name 
+                string recent = HomePageSearchString;
+
+                command.Parameters.Add("testName", SqlDbType.NVarChar).Value = recent;
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    DataTable table = new DataTable();
+                    table.Load(reader);
+                    data.TestCaseId = int.Parse(table.Rows[index]["testCaseId"].ToString());
+                    data.CreatedBy = table.Rows[index]["createdBy"].ToString();
+                    data.ImagePath = table.Rows[index]["imagePath"].ToString();
+                    data.TestRunId = int.Parse(table.Rows[index]["testRunId"].ToString());
+                    data.TestName = recent;
+                    data.CreatedDate = DateTime.Parse(table.Rows[index]["createdDate"].ToString());
+                    data.TestStatus = int.Parse(table.Rows[index]["testStatusId"].ToString());
+                    reader.Close();
+                    connection.Close();
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e.StackTrace, "GetTestCasesByTestName");
+            }
+            catch (InvalidOperationException e)
+            {
+                Console.WriteLine(e.StackTrace, "GetTestCasesByTestName");
             }
             return data;
         }

@@ -75,7 +75,7 @@ else{
         </thead>
         <tbody>
             @foreach (var data in testdata){ //prints multiple rows of data onto the table
-                @if(data.TestStatus == 1){ //if passed is true make it green and passed
+                @if(data.TestStatus == 2){ //if passed is true make it green and passed
                     testResult = "Passed";
                     <tr>
                     <td><span class="dot" style="background-color: #9dffb0;"></span></td>
@@ -88,7 +88,7 @@ else{
                     <td>@data.CreatedBy</td>
                 </tr>
                 }
-                else if (data.TestStatus == 3 ){
+                else if (data.TestStatus == 1 ){
                     testResult = "Interrupted";
                     <tr>
                     <td><span class="dot" style="background-color: #FFFF60;"></span></td>
@@ -194,11 +194,11 @@ else{
         double numberInterrupted = 0;
         foreach (var data in testdata)
         {
-            if (data.TestStatus == 1)
+            if (data.TestStatus == 2)
             {
                 numberPassed++;
             }
-            if (data.TestStatus == 3)
+            if (data.TestStatus == 1)
             {
                 numberInterrupted++;
             }
